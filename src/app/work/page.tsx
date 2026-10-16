@@ -25,11 +25,13 @@ export default function WorkPage() {
           Production systems and the thinking behind them. Each project shows what was broken, what
           I built, and what changed for the people using it.
         </p>
-        <div className="mt-20 grid gap-x-8 gap-y-24 lg:grid-cols-2">
+        <ul aria-label="Projects" className="mt-20 grid gap-x-8 gap-y-24 lg:grid-cols-2">
           {projects.map((project, i) => (
-            <ProjectFeature key={project.slug} project={project} index={i} />
+            <li key={project.slug}>
+              <ProjectFeature project={project} index={i} />
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
       <GithubActivity />
     </>

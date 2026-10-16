@@ -64,7 +64,9 @@ test.describe("navigation", () => {
 test.describe("work", () => {
   test("archive lists every project with the cover story first", async ({ page }) => {
     await page.goto("/work");
-    const cards = page.getByRole("main").getByRole("article");
+    // Scoped to the project list: the GitHub section below renders its own
+    // repository rows (live data in CI), which must not be counted here.
+    const cards = page.getByRole("list", { name: "Projects" }).getByRole("listitem");
     await expect(cards).toHaveCount(3);
     await expect(cards.first()).toContainText("Unified Defect Ticketing System");
   });

@@ -103,11 +103,13 @@ export default function HomePage() {
             </Link>
           }
         />
-        <div className="mt-16 flex flex-col gap-24">
+        <ul aria-label="Featured projects" className="mt-16 flex flex-col gap-24">
           {featured.map((project, i) => (
-            <ProjectFeature key={project.slug} project={project} index={i} />
+            <li key={project.slug}>
+              <ProjectFeature project={project} index={i} />
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </>
   );

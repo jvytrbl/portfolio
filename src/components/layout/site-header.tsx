@@ -2,9 +2,12 @@ import Link from "next/link";
 import { CommandMenuTrigger } from "@/components/command/command-menu-trigger";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { GithubIcon } from "@/components/ui/github-icon";
+import { getProjects } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
 export function SiteHeader() {
+  const projects = getProjects().map(({ title, url }) => ({ title, url }));
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/75 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4 sm:px-6">
@@ -36,7 +39,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1 md:ml-0">
-          <CommandMenuTrigger />
+          <CommandMenuTrigger projects={projects} />
           <a
             href={siteConfig.github.url}
             target="_blank"

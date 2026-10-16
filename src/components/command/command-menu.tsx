@@ -1,19 +1,22 @@
 "use client";
 
 import { Command } from "cmdk";
-import { ArrowRight, Code2, Copy, ExternalLink, Home, Moon, Sun } from "lucide-react";
+import { ArrowRight, Code2, Copy, ExternalLink, FolderGit2, Home, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useTheme } from "@/components/theme/use-theme";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { siteConfig } from "@/lib/site";
 
+export type CommandProject = { title: string; url: string };
+
 type CommandMenuProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  projects: CommandProject[];
 };
 
-export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
+export function CommandMenu({ open, onOpenChange, projects }: CommandMenuProps) {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [copied, setCopied] = useState(false);
@@ -72,6 +75,21 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
             </Item>
           ))}
         </Command.Group>
+
+        {projects.length > 0 && (
+          <Command.Group heading="Projects">
+            {projects.map((project) => (
+              <Item
+                key={project.url}
+                icon={<FolderGit2 />}
+                onSelect={() => run(() => router.push(project.url))}
+                keywords={["project", "case study"]}
+              >
+                {project.title}
+              </Item>
+            ))}
+          </Command.Group>
+        )}
 
         <Command.Group heading="Actions">
           <Item icon={<Copy />} onSelect={copyEmail} keywords={["contact", "mail"]}>

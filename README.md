@@ -74,6 +74,11 @@ outcomes: # optional, up to 4 headline metrics
 The MDX body supports GitHub-flavoured Markdown, syntax-highlighted code blocks, and the
 `<Callout>` component.
 
+### Résumé
+
+Drop your PDF at `public/resume.pdf`. The hero's "Résumé" download button appears
+automatically on the next build — it stays hidden until the file exists.
+
 ## Project structure
 
 ```

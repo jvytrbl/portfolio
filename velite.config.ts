@@ -2,13 +2,7 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import { defineCollection, defineConfig, s } from "velite";
-
-export const PROJECT_CATEGORIES = [
-  "Full-Stack",
-  "AI/ML",
-  "Enterprise ERP/API",
-  "Open Source",
-] as const;
+import { PROJECT_CATEGORIES } from "./src/lib/categories";
 
 const projects = defineCollection({
   name: "Project",

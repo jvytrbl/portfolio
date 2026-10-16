@@ -36,3 +36,10 @@ describe("content layer", () => {
     expect(getExperience().map((e) => e.company)).toEqual(["Current", "Middle", "Past"]);
   });
 });
+
+describe("credentials", () => {
+  it("exposes the credentials document", async () => {
+    const { getCredentials } = await loadContent();
+    expect(getCredentials().education[0].institution).toBe("Uni");
+  });
+});

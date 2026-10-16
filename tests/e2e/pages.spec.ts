@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("home page", () => {
   test("renders every section with working anchors", async ({ page }) => {
     await page.goto("/");
-    for (const id of ["projects", "experience", "skills", "contact"]) {
+    for (const id of ["projects", "experience", "credentials", "skills", "contact"]) {
       await expect(page.locator(`section#${id}`)).toBeAttached();
     }
     await page
@@ -36,15 +36,15 @@ test.describe("projects", () => {
   });
 
   test("renders a case study with table of contents and highlighted code", async ({ page }) => {
-    await page.goto("/projects/vendor-performance-platform");
-    await expect(page).toHaveTitle(/Vendor Performance Platform/);
+    await page.goto("/projects/vendor-performance-intelligence-platform");
+    await expect(page).toHaveTitle(/Vendor Performance Intelligence Platform/);
     await expect(page.locator("pre.shiki").first()).toBeVisible();
 
     await page
       .getByRole("navigation", { name: "On this page" })
-      .getByRole("link", { name: "Outcomes" })
+      .getByRole("link", { name: "Testing strategy" })
       .click();
-    await expect(page).toHaveURL(/#outcomes$/);
+    await expect(page).toHaveURL(/#testing-strategy$/);
   });
 
   test("shows the not-found page (noindex) for an unknown project", async ({ page }) => {
@@ -60,8 +60,10 @@ test.describe("projects", () => {
     await page.keyboard.press("ControlOrMeta+k");
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.keyboard.type("vendor");
-    await expect(page.getByRole("option", { name: "Vendor Performance Platform" })).toBeVisible();
+    await expect(
+      page.getByRole("option", { name: "Vendor Performance Intelligence Platform" }),
+    ).toBeVisible();
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/projects\/vendor-performance-platform$/);
+    await expect(page).toHaveURL(/\/projects\/vendor-performance-intelligence-platform$/);
   });
 });

@@ -12,7 +12,7 @@ export function ContactSection() {
     <section id="contact" className="scroll-mt-20 border-t border-border/60 bg-bg-deep/50 py-24">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <SectionHeading
-          index="04"
+          index="05"
           path="contact"
           title="Let's build something"
           description="Hiring, collaborating, or just want to talk architecture? My inbox is open."

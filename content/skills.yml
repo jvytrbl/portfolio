@@ -1,27 +1,36 @@
-# Placeholder skills matrix. level: expert | proficient | familiar
-- category: Frontend
-  items:
-    - { name: TypeScript, level: expert }
-    - { name: React, level: expert }
-    - { name: Next.js, level: expert }
-    - { name: Tailwind CSS, level: proficient }
+# Skills grouped by where they sit in the stack.
+- category: Languages
+  items: [Python, TypeScript, JavaScript, SQL]
 
-- category: Backend & Database
-  items:
-    - { name: Node.js, level: proficient }
-    - { name: SQL Server, level: proficient }
-    - { name: PostgreSQL, level: proficient }
-    - { name: REST API design, level: expert }
+- category: Full-Stack & Web
+  items: [Next.js, React.js, Supabase, Prisma, Django, Laravel, RESTful API]
 
-- category: DevOps & Tooling
+- category: AI & Machine Learning
   items:
-    - { name: GitHub Actions, level: proficient }
-    - { name: Vercel, level: proficient }
-    - { name: Docker, level: familiar }
-    - { name: Playwright, level: proficient }
+    - Retrieval-augmented generation (RAG)
+    - Agentic AI systems
+    - LLM system analysis
+    - Prompt engineering
+    - Machine learning
+    - Model evaluation
+    - Feature engineering
 
-- category: Enterprise Integrations
+- category: Data & Analytics
   items:
-    - { name: ERP data pipelines, level: proficient }
-    - { name: Azure AD / MSAL, level: proficient }
-    - { name: Excel / PDF reporting, level: expert }
+    - PostgreSQL
+    - SQL Server / Azure SQL
+    - Power BI
+    - Tableau
+    - Star schema modelling
+    - Exploratory data analysis
+    - CRISP-DM
+
+- category: Testing & DevOps
+  items: [Vitest, Playwright, Stryker (mutation testing), TDD, Docker, Linux, GitHub]
+
+- category: Cloud & Enterprise
+  items:
+    - Microsoft Dynamics Business Central
+    - Azure AD SSO
+    - Azure Key Vault & RBAC
+    - ISO 27001 practices

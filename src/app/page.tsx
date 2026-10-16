@@ -1,4 +1,5 @@
 import { ContactSection } from "@/components/home/contact-section";
+import { CredentialsSection } from "@/components/home/credentials-section";
 import { ExperienceTimeline } from "@/components/home/experience-timeline";
 import { FeaturedProjects } from "@/components/home/featured-projects";
 import { Hero } from "@/components/home/hero";
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Hero />
       <FeaturedProjects />
       <ExperienceTimeline />
+      <CredentialsSection />
       <SkillsMatrix />
       <ContactSection />
     </>

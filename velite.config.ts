@@ -45,7 +45,9 @@ const experience = defineCollection({
     company: s.string(),
     role: s.string(),
     location: s.string().optional(),
-    employmentType: s.enum(["Full-time", "Part-time", "Contract", "Internship", "Freelance"]),
+    employmentType: s
+      .enum(["Full-time", "Part-time", "Contract", "Internship", "Freelance"])
+      .optional(),
     start: yearMonth,
     end: yearMonth.optional(), // omitted = current role
     summary: s.string(),
@@ -59,14 +61,38 @@ const skills = defineCollection({
   pattern: "skills.yml",
   schema: s.object({
     category: s.string(),
-    items: s
+    items: s.array(s.string()).nonempty(),
+  }),
+});
+
+const credentials = defineCollection({
+  name: "Credentials",
+  pattern: "credentials.yml",
+  single: true,
+  schema: s.object({
+    education: s.array(
+      s.object({
+        degree: s.string(),
+        institution: s.string(),
+        location: s.string().optional(),
+        start: yearMonth,
+        end: yearMonth.optional(), // omitted = in progress
+      }),
+    ),
+    awards: s
+      .array(s.object({ title: s.string(), issuer: s.string(), date: yearMonth }))
+      .default([]),
+    certifications: s
       .array(
         s.object({
-          name: s.string(),
-          level: s.enum(["expert", "proficient", "familiar"]),
+          title: s.string(),
+          issuer: s.string(),
+          start: yearMonth,
+          end: yearMonth.optional(),
         }),
       )
-      .nonempty(),
+      .default([]),
+    languages: s.array(s.object({ name: s.string(), proficiency: s.string() })).default([]),
   }),
 });
 
@@ -79,7 +105,7 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { projects, experience, skills },
+  collections: { projects, experience, skills, credentials },
   mdx: {
     rehypePlugins: [
       rehypeSlug,

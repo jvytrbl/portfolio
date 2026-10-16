@@ -1,0 +1,57 @@
+---
+title: Unified Defect Ticketing System
+summary: Replaced a fabric manufacturer's WhatsApp-and-manual-log defect reporting with two production apps on a shared real-time backend, integrated with Microsoft Business Central.
+category: Enterprise ERP/API
+techStack: [Next.js, Supabase, PWA, Azure AD SSO, Business Central, TypeScript]
+role: Sole engineer · Jotex Sdn Bhd
+featured: true
+publishedAt: 2026-05-01
+outcomes:
+  - label: Production apps
+    value: "2"
+  - label: Departments using it daily
+    value: "4"
+  - label: Records paginated server-side
+    value: "90,000+"
+---
+
+## Problem
+
+Defect reports at a fabric manufacturing company were spread across multiple WhatsApp groups and
+manual logs. Nothing was traceable end to end, and every department kept its own partial picture.
+
+## Solution
+
+A single ticketing system, now used daily by **sales, warehouse, accounts, and purchasing**. As the
+sole engineer I own architecture, deployment, and ongoing maintenance, and work directly with end
+users to turn real operational workflows into system design.
+
+## Architecture
+
+```txt
+Field sales PWA (mobile-first) ─┐
+                                ├──► Supabase (Postgres + real-time sync)
+Operations dashboard (desktop) ─┘            │
+                                             ▼
+                    ERP pipeline ──► Microsoft Dynamics Business Central
+                                     (service orders · credit notes)
+```
+
+- **Two Next.js apps, one backend** — a mobile-first PWA for field sales and a desktop dashboard
+  for internal operations, kept in sync in real time.
+- **Multi-tenant, role-based access** supporting multiple business units, with Microsoft Azure AD
+  single sign-on.
+- **ERP integration** with Business Central for automated service order and credit note
+  generation.
+
+## Scaling the data browser
+
+A data browser holding **90,000+ records** started causing browser stability failures. After
+diagnosing the root cause as client-side loading at scale, I redesigned it to use server-side
+pagination, keeping the UI responsive regardless of dataset size.
+
+## Outcomes
+
+- One shared, traceable record of every defect across four departments.
+- ERP documents generated automatically instead of re-keyed by hand.
+- A data browser that stays stable as records grow.

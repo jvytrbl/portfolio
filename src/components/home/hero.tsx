@@ -12,7 +12,7 @@ export function Hero() {
     { kind: "command", text: "whoami" },
     { kind: "output", text: `${siteConfig.name} — ${siteConfig.title}` },
     { kind: "command", text: "cat focus.txt" },
-    { kind: "muted", text: "full-stack systems · API integrations · clean architecture" },
+    { kind: "muted", text: "full-stack · ERP integrations · applied AI · TDD" },
     { kind: "command", text: "ls ~/projects | wc -l" },
     { kind: "success", text: `✓ ${projectCount} case studies ready` },
   ];
@@ -43,7 +43,7 @@ export function Hero() {
 
           <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
             {siteConfig.name}
-            <span className="mt-2 block bg-gradient-to-r from-accent to-fg-muted bg-clip-text text-transparent">
+            <span className="mt-3 block bg-gradient-to-r from-accent to-fg-muted bg-clip-text text-3xl text-transparent sm:text-4xl">
               {siteConfig.title}
             </span>
           </h1>

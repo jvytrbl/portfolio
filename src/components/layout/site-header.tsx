@@ -10,17 +10,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/75 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
         <Link
           href="/"
           className="group flex items-center gap-1 font-mono text-sm text-fg"
-          aria-label={`${siteConfig.name} — home`}
+          aria-label={`${siteConfig.name}, home`}
         >
-          <span className="text-highlight">~/</span>
+          <span className="text-fg-muted">~/</span>
           <span>{siteConfig.github.username}</span>
-          <span aria-hidden="true" className="animate-blink text-accent">
-            _
-          </span>
         </Link>
 
         <nav aria-label="Primary" className="ml-auto hidden md:block">
@@ -29,7 +26,7 @@ export function SiteHeader() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="rounded-md px-3 py-2 text-sm text-fg-muted transition-colors hover:text-fg"
+                  className="flex min-h-11 items-center rounded-md px-3 text-sm text-fg-muted transition-colors hover:text-fg"
                 >
                   {link.label}
                 </Link>
@@ -45,7 +42,7 @@ export function SiteHeader() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub profile"
-            className="inline-flex size-9 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+            className="inline-flex size-11 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
           >
             <GithubIcon className="size-4" />
           </a>

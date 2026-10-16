@@ -43,7 +43,7 @@ export async function sendNotification(data: ContactInput): Promise<void> {
       to: [env.CONTACT_TO_EMAIL],
       reply_to: data.email,
       subject: `[Portfolio] ${data.subject}`,
-      // Plain text only — visitor input is never interpreted as HTML.
+      // Plain text only; visitor input is never interpreted as HTML.
       text: `From: ${data.name} <${data.email}>\n\n${data.message}`,
     }),
   });

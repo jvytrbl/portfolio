@@ -1,5 +1,4 @@
-import { ArrowUpRight, FolderGit2, GitFork, Star } from "lucide-react";
-import { Reveal } from "@/components/motion/reveal";
+import { Star } from "lucide-react";
 import { buttonClass } from "@/components/ui/button";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -23,13 +22,14 @@ export async function GithubActivity() {
   const overview = await getGithubOverview();
 
   return (
-    <section id="github" className="scroll-mt-20 border-y border-border/60 bg-bg-deep/50 py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+    <section id="github" className="scroll-mt-20 border-y border-border/60 bg-bg-deep/60 py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           index="05"
-          path="github"
+          label="GitHub"
           title="Open source activity"
-          description="Live from the GitHub API, refreshed hourly."
+          description="Live from the GitHub API, refreshed every hour."
+          size="secondary"
         />
         {overview ? <GithubActivityView overview={overview} /> : <Fallback />}
       </div>
@@ -49,18 +49,13 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <dl
-        className={cn(
-          "grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border",
-          stats.length === 4 ? "sm:grid-cols-4" : "sm:grid-cols-3",
-        )}
-      >
+      <dl className="flex flex-wrap gap-x-12 gap-y-4">
         {stats.map((s) => (
-          <div key={s.label} className="bg-surface p-5">
-            <dt className="font-mono text-xs text-fg-muted">{s.label}</dt>
-            <dd className="mt-1 text-2xl font-semibold text-accent tabular-nums">
+          <div key={s.label}>
+            <dd className="font-display text-3xl font-semibold text-fg tabular-nums">
               {s.value.toLocaleString("en-US")}
             </dd>
+            <dt className="text-sm text-fg-muted">{s.label}</dt>
           </div>
         ))}
       </dl>
@@ -68,15 +63,15 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
       {overview.contributions && <Heatmap weeks={overview.contributions.weeks} />}
 
       <div>
-        <h3 className="mb-4 font-mono text-sm text-fg-muted">
-          {overview.source === "pinned" ? "Pinned repositories" : "Repositories"}
+        <h3 className="mb-3 font-mono text-xs tracking-wide text-fg-muted uppercase">
+          {overview.source === "pinned" ? "Pinned repositories" : "Recently active repositories"}
         </h3>
         {overview.repos.length > 0 ? (
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {overview.repos.map((repo, i) => (
-              <Reveal as="li" key={repo.url} delay={(i % 3) * 0.06}>
-                <RepoCard repo={repo} />
-              </Reveal>
+          <ul className="divide-y divide-border border-y border-border">
+            {overview.repos.map((repo) => (
+              <li key={repo.url}>
+                <RepoRow repo={repo} />
+              </li>
             ))}
           </ul>
         ) : (
@@ -96,28 +91,25 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
   );
 }
 
-function RepoCard({ repo }: { repo: GithubRepo }) {
+function RepoRow({ repo }: { repo: GithubRepo }) {
   return (
-    <article className="group relative flex h-full flex-col rounded-xl border border-border bg-surface/60 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/50">
-      <h4 className="flex items-center gap-2 font-mono text-sm font-medium">
-        <FolderGit2 className="size-4 shrink-0 text-highlight" aria-hidden="true" />
-        <a
-          href={repo.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="truncate group-hover:text-accent after:absolute after:inset-0"
-        >
-          {repo.name}
-        </a>
-        <ArrowUpRight
-          aria-hidden="true"
-          className="ml-auto size-4 shrink-0 text-accent opacity-0 transition-opacity group-hover:opacity-100"
-        />
-      </h4>
-      <p className="mt-2 line-clamp-2 flex-1 text-sm text-fg-muted">
-        {repo.description ?? "No description."}
-      </p>
-      <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-fg-muted">
+    <article className="group relative grid gap-1 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-8">
+      <div className="min-w-0">
+        <h4 className="font-mono text-sm font-medium">
+          <a
+            href={repo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors group-hover:text-accent after:absolute after:inset-0"
+          >
+            {repo.name}
+          </a>
+        </h4>
+        <p className="mt-0.5 truncate text-sm text-fg-muted">
+          {repo.description ?? "No description."}
+        </p>
+      </div>
+      <p className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-fg-muted">
         {repo.language && (
           <span className="flex items-center gap-1.5">
             <span
@@ -131,10 +123,7 @@ function RepoCard({ repo }: { repo: GithubRepo }) {
         <span className="flex items-center gap-1" aria-label={`${repo.stars} stars`}>
           <Star className="size-3.5" aria-hidden="true" /> {repo.stars}
         </span>
-        <span className="flex items-center gap-1" aria-label={`${repo.forks} forks`}>
-          <GitFork className="size-3.5" aria-hidden="true" /> {repo.forks}
-        </span>
-        <span className="ml-auto">updated {formatDate(repo.pushedAt)}</span>
+        <span>Updated {formatDate(repo.pushedAt)}</span>
       </p>
     </article>
   );
@@ -145,7 +134,7 @@ function Heatmap({ weeks }: { weeks: ContributionDay[][] }) {
   const total = recent.flat().reduce((sum, d) => sum + d.count, 0);
 
   return (
-    <figure className="overflow-x-auto rounded-xl border border-border bg-surface/60 p-5">
+    <figure className="overflow-x-auto">
       <div
         role="img"
         aria-label={`${total} contributions in the last year`}
@@ -179,10 +168,9 @@ function Heatmap({ weeks }: { weeks: ContributionDay[][] }) {
 
 function Fallback() {
   return (
-    <div className="flex flex-col items-start gap-4 rounded-xl border border-border bg-surface/60 p-6">
-      <p className="font-mono text-sm text-fg-muted">
-        <span className="text-highlight">$</span> gh api users/{siteConfig.github.username}
-        <span className="mt-1 block text-fg-muted/80">→ stats are temporarily unavailable</span>
+    <div className="flex flex-col items-start gap-4">
+      <p className="text-fg-muted">
+        Live GitHub stats are temporarily unavailable. My repositories are one click away.
       </p>
       <a
         href={siteConfig.github.url}

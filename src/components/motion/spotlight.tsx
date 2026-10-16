@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 // A soft accent glow that follows the pointer across its parent. Updates two
-// CSS variables per animation frame — no React re-renders.
+// CSS variables per animation frame, with no React re-renders.
 export function Spotlight() {
   const ref = useRef<HTMLDivElement>(null);
 

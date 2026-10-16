@@ -29,7 +29,7 @@ export type ContactRequest = {
 
 const SUCCESS: ContactState = {
   status: "success",
-  message: "Thanks — your message is on its way. I'll reply as soon as I can.",
+  message: "Thanks, your message is on its way. I aim to reply within two working days.",
 };
 
 // Pipeline: configured → honeypot → validate → human check → rate limit →
@@ -39,7 +39,7 @@ export async function handleContactSubmission(
   req: ContactRequest,
   deps: ContactDeps,
 ): Promise<ContactState> {
-  const values: Partial<ContactInput> = {
+  const values: Partial<Record<keyof ContactInput, string>> = {
     name: req.fields.name,
     email: req.fields.email,
     subject: req.fields.subject,
@@ -49,7 +49,7 @@ export async function handleContactSubmission(
   if (!deps.configured) {
     return {
       status: "error",
-      message: "The contact form isn't switched on yet — please email me directly.",
+      message: "The contact form isn't switched on yet. Please use the email address on the right.",
       values,
     };
   }
@@ -64,13 +64,20 @@ export async function handleContactSubmission(
       const field = issue.path[0] as ContactField;
       fieldErrors[field] ??= issue.message;
     }
-    return { status: "error", message: "Please fix the highlighted fields.", fieldErrors, values };
+    const count = Object.keys(fieldErrors).length;
+    return {
+      status: "error",
+      message: `Please fix ${count === 1 ? "the highlighted field" : `the ${count} highlighted fields`}.`,
+      fieldErrors,
+      values,
+    };
   }
 
   if (!req.turnstileToken || !(await deps.verifyTurnstile(req.turnstileToken, req.ip))) {
     return {
       status: "error",
-      message: "Couldn't verify you're human. Please try again.",
+      message:
+        "The human check didn't complete. Wait for the checkbox to turn green, then send again.",
       values,
     };
   }
@@ -84,7 +91,8 @@ export async function handleContactSubmission(
     if (fromIp >= RATE_LIMIT.perIpPerHour || total >= RATE_LIMIT.globalPerDay) {
       return {
         status: "error",
-        message: "Too many messages right now. Please try again later or email me directly.",
+        message:
+          "You've sent several messages recently. Please try again in an hour, or email me directly.",
         values,
       };
     }
@@ -94,7 +102,8 @@ export async function handleContactSubmission(
     deps.log("contact: failed to store submission", error);
     return {
       status: "error",
-      message: "Something went wrong on my side. Please email me directly.",
+      message:
+        "Something went wrong on my side and the message wasn't sent. Please email me directly.",
       values,
     };
   }
@@ -102,7 +111,7 @@ export async function handleContactSubmission(
   try {
     await deps.sendNotification(parsed.data);
   } catch (error) {
-    // Already stored — the message is safe even if the email fails.
+    // Already stored, so the message is safe even if the email fails.
     deps.log("contact: notification email failed", error);
   }
 

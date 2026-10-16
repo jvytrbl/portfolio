@@ -1,6 +1,6 @@
 ---
 title: Vendor Performance Intelligence Platform
-summary: Capstone system that scores vendors on delivery, pricing, and order accuracy — with AI that only narrates numbers the application has already calculated and validated.
+summary: Capstone system that scores vendors on delivery, pricing, and order accuracy, with AI that only narrates numbers the application has already calculated and validated.
 category: AI/ML
 techStack:
   [
@@ -16,6 +16,7 @@ techStack:
   ]
 role: Sole engineer
 featured: true
+order: 2
 publishedAt: 2026-09-01
 outcomes:
   - label: Performance benchmarks
@@ -52,7 +53,7 @@ Vendor data ──► data model (3 benchmarks) ──► scoring in application
 
 ### Data model
 
-Three performance benchmarks — **delivery time**, **pricing**, and **order accuracy** — with
+Three performance benchmarks (**delivery time**, **pricing**, and **order accuracy**) with
 deliberate handling of _missing_ versus _zero_ data, so the system never silently misrepresents an
 incomplete vendor record.
 
@@ -82,4 +83,4 @@ A multi-layered strategy built from scratch:
 
 Provisioned and secured independently as the sole engineer: Azure AD app registration, Azure SQL
 Database, Key Vault for credentials and secrets, and role-based access control scoped to least
-privilege — plus budget alerts and version control on GitHub.
+privilege, plus budget alerts and version control on GitHub.

@@ -1,10 +1,22 @@
 "use client";
 
 import { CheckCircle2, Loader2, Send, TriangleAlert } from "lucide-react";
-import { useActionState, useEffect, useRef, type ComponentProps } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+} from "react";
 import { submitContact } from "@/app/actions/contact";
 import { buttonClass } from "@/components/ui/button";
-import { HONEYPOT_FIELD, initialContactState, type ContactField } from "@/lib/contact/schema";
+import {
+  HONEYPOT_FIELD,
+  MESSAGE_MAX,
+  initialContactState,
+  type ContactField,
+} from "@/lib/contact/schema";
 import { cn } from "@/lib/utils";
 import { Turnstile } from "./turnstile";
 
@@ -13,16 +25,40 @@ type ContactFormProps = {
   turnstileSiteKey?: string;
 };
 
+const FIELD_ORDER: ContactField[] = ["name", "email", "subject", "message"];
+
 export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) {
   const [state, formAction, pending] = useActionState(submitContact, initialContactState);
+  const [verified, setVerified] = useState(false);
+  const [messageLength, setMessageLength] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
   const values = state.status === "error" ? (state.values ?? {}) : {};
 
-  // Move focus to the result so keyboard and screen-reader users hear it.
+  const needsHumanCheck = configured && Boolean(turnstileSiteKey);
+  const blockedReason = !configured
+    ? "The form is being set up. Please use the email address instead."
+    : needsHumanCheck && !verified
+      ? "Waiting for the human check to finish."
+      : null;
+
+  // After a result, focus the first invalid field (so its error is read out),
+  // otherwise the status message.
   useEffect(() => {
-    if (state.status !== "idle") statusRef.current?.focus();
+    if (state.status === "idle") return;
+    const firstInvalid = FIELD_ORDER.find((f) => errors[f]);
+    if (firstInvalid) {
+      formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
+    } else {
+      statusRef.current?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once per result
   }, [state]);
+
+  function guardSubmit(event: FormEvent<HTMLFormElement>) {
+    if (blockedReason) event.preventDefault();
+  }
 
   if (state.status === "success") {
     return (
@@ -30,30 +66,30 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
         ref={statusRef}
         tabIndex={-1}
         role="status"
-        className="flex flex-col items-start gap-3 rounded-xl border border-success/40 bg-success/5 p-6 outline-none"
+        className="flex flex-col items-start gap-3 rounded-xl bg-success/10 p-6 outline-none"
       >
         <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
-        <p className="font-mono text-sm text-success">$ message sent ✓</p>
-        <p className="text-fg-muted">{state.message}</p>
+        <p className="font-display text-xl font-semibold">Message sent</p>
+        <p className="text-fg">{state.message}</p>
       </div>
     );
   }
 
   return (
     <form
+      ref={formRef}
       action={formAction}
+      onSubmit={guardSubmit}
       noValidate
-      className="flex flex-col gap-4"
-      aria-describedby="contact-status"
+      className="flex flex-col gap-5"
     >
       {!configured && (
-        <p className="rounded-lg border border-highlight/40 bg-highlight/5 px-4 py-3 text-sm text-fg-muted">
-          <span className="font-mono text-highlight">note:</span> the form is being set up — for
-          now, please use the email button.
+        <p id="contact-blocked" className="rounded-lg bg-surface-raised px-4 py-3 text-sm text-fg">
+          The form is being set up. Until then, please use the email address.
         </p>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         <Field
           label="Name"
           name="name"
@@ -66,17 +102,27 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
           name="email"
           type="email"
           autoComplete="email"
+          inputMode="email"
           error={errors.email}
           defaultValue={values.email}
         />
       </div>
-      <Field label="Subject" name="subject" error={errors.subject} defaultValue={values.subject} />
+      <Field
+        label="Subject"
+        name="subject"
+        optional
+        error={errors.subject}
+        defaultValue={values.subject}
+      />
       <Field
         label="Message"
         name="message"
         multiline
         error={errors.message}
         defaultValue={values.message}
+        maxLength={MESSAGE_MAX}
+        onLengthChange={setMessageLength}
+        hint={`${messageLength.toLocaleString("en-US")} / ${MESSAGE_MAX.toLocaleString("en-US")}`}
       />
 
       {/* Honeypot: hidden from people and assistive tech, tempting to bots. */}
@@ -87,15 +133,11 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
         </label>
       </div>
 
-      {configured && turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} resetKey={state} />}
+      {needsHumanCheck && turnstileSiteKey && (
+        <Turnstile siteKey={turnstileSiteKey} resetKey={state} onVerifiedChange={setVerified} />
+      )}
 
-      <div
-        id="contact-status"
-        ref={statusRef}
-        tabIndex={-1}
-        aria-live="polite"
-        className="outline-none"
-      >
+      <div ref={statusRef} tabIndex={-1} aria-live="polite" className="outline-none">
         {state.status === "error" && (
           <p className="flex items-start gap-2 text-sm text-danger">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -104,14 +146,27 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={pending || !configured}
-        className={buttonClass("primary", "w-fit disabled:cursor-not-allowed disabled:opacity-50")}
-      >
-        {pending ? <Loader2 className="animate-spin" /> : <Send />}
-        {pending ? "Sending…" : "Send message"}
-      </button>
+      <div className="flex flex-wrap items-center gap-4">
+        {/* aria-disabled (not disabled) keeps the button focusable so keyboard
+            users can reach it and hear why it's unavailable. */}
+        <button
+          type="submit"
+          aria-disabled={pending || Boolean(blockedReason)}
+          aria-describedby={blockedReason ? "contact-blocked-reason" : undefined}
+          className={buttonClass(
+            "primary",
+            "aria-disabled:cursor-not-allowed aria-disabled:opacity-50",
+          )}
+        >
+          {pending ? <Loader2 className="animate-spin" /> : <Send />}
+          {pending ? "Sending…" : "Send message"}
+        </button>
+        {blockedReason && (
+          <p id="contact-blocked-reason" className="text-sm text-fg-muted">
+            {blockedReason}
+          </p>
+        )}
+      </div>
     </form>
   );
 }
@@ -121,37 +176,66 @@ type FieldProps = {
   name: ContactField;
   error?: string;
   multiline?: boolean;
+  optional?: boolean;
+  hint?: string;
+  onLengthChange?: (length: number) => void;
 } & Omit<ComponentProps<"input">, "name">;
 
-function Field({ label, name, error, multiline, defaultValue, ...props }: FieldProps) {
+function Field({
+  label,
+  name,
+  error,
+  multiline,
+  optional,
+  hint,
+  onLengthChange,
+  defaultValue,
+  maxLength,
+  ...props
+}: FieldProps) {
   const id = `contact-${name}`;
   const errorId = `${id}-error`;
+  const hintId = `${id}-hint`;
+  const describedBy = [error && errorId, hint && hintId].filter(Boolean).join(" ") || undefined;
   const className = cn(
-    "w-full rounded-md border bg-bg-deep/60 px-3 py-2.5 text-sm text-fg placeholder:text-fg-muted/60 transition-colors focus:border-accent focus:outline-none",
+    "min-h-11 w-full rounded-md border bg-bg-deep px-3 py-2.5 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-accent focus:outline-none",
     error ? "border-danger" : "border-border",
   );
   const shared = {
     id,
     name,
-    required: true,
+    required: !optional,
+    maxLength,
     "aria-invalid": error ? true : undefined,
-    "aria-describedby": error ? errorId : undefined,
+    "aria-describedby": describedBy,
     defaultValue: defaultValue as string | undefined,
-    className,
+    onChange: onLengthChange
+      ? (e: { currentTarget: { value: string } }) => onLengthChange(e.currentTarget.value.length)
+      : undefined,
   };
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="font-mono text-xs text-fg-muted">
-        {label.toLowerCase()}
-      </label>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <label htmlFor={id} className="text-sm font-medium text-fg">
+          {label}{" "}
+          <span className="font-normal text-fg-muted">
+            {optional ? "(optional)" : "(required)"}
+          </span>
+        </label>
+        {hint && (
+          <span id={hintId} className="font-mono text-xs text-fg-muted tabular-nums">
+            {hint}
+          </span>
+        )}
+      </div>
       {multiline ? (
         <textarea {...shared} rows={6} className={cn(className, "resize-y")} />
       ) : (
-        <input {...shared} {...props} />
+        <input {...shared} {...props} className={className} />
       )}
       {error && (
-        <p id={errorId} className="text-xs text-danger">
+        <p id={errorId} className="text-sm text-danger">
           {error}
         </p>
       )}

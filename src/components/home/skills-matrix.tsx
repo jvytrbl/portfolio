@@ -1,38 +1,23 @@
-import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Tag } from "@/components/ui/tag";
 import { getSkills } from "@/lib/content";
 
 export function SkillsMatrix() {
   const groups = getSkills();
 
   return (
-    <section id="skills" className="scroll-mt-20 py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <SectionHeading
-          index="04"
-          path="skills"
-          title="Technical skills"
-          description="Grouped by where they sit in the stack."
-        />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group, i) => (
-            <Reveal
-              key={group.category}
-              delay={(i % 3) * 0.08}
-              className="rounded-xl border border-border bg-surface/60 p-6 transition-colors hover:border-accent/40"
-            >
-              <h3 className="font-mono text-sm text-highlight">{group.category}</h3>
-              <ul className="mt-4 flex flex-wrap gap-1.5">
-                {group.items.map((item) => (
-                  <li key={item}>
-                    <Tag className="text-fg">{item}</Tag>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+    <section id="skills" className="scroll-mt-20 pt-4 pb-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading index="04" label="Skills" title="Technical toolkit" size="secondary" />
+        <dl className="divide-y divide-border border-y border-border">
+          {groups.map((group) => (
+            <div key={group.category} className="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-8">
+              <dt className="font-mono text-xs tracking-wide text-fg-muted uppercase sm:pt-1">
+                {group.category}
+              </dt>
+              <dd className="max-w-[70ch] text-pretty text-fg">{group.items.join(", ")}</dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

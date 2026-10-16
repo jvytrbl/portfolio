@@ -67,6 +67,7 @@ role: Lead engineer # optional
 repoUrl: https://github.com/... # optional
 liveUrl: https://... # optional
 featured: true # show on the home page
+order: 1 # optional: featured order; 1 = the large lead project
 draft: false # true hides it in production
 publishedAt: 2026-10-01
 outcomes: # optional, up to 4 headline metrics

@@ -21,7 +21,10 @@ export function getProjects(): Project[] {
 }
 
 export function getFeaturedProjects(): Project[] {
-  return getProjects().filter((p) => p.featured);
+  // Explicit `order` wins; unordered projects follow, newest first.
+  return getProjects()
+    .filter((p) => p.featured)
+    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
 }
 
 export function getProjectBySlug(slug: string): Project | undefined {

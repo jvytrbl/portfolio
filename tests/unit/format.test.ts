@@ -13,7 +13,7 @@ describe("format", () => {
   });
 
   it("formats open and closed periods", () => {
-    expect(formatPeriod("2022-06", "2024-02")).toBe("Jun 2022 — Feb 2024");
-    expect(formatPeriod("2024-03")).toBe("Mar 2024 — Present");
+    expect(formatPeriod("2022-06", "2024-02")).toBe("Jun 2022 – Feb 2024");
+    expect(formatPeriod("2024-03")).toBe("Mar 2024 – Present");
   });
 });

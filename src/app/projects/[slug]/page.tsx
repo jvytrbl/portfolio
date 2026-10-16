@@ -49,18 +49,18 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
   const older = all[index + 1];
 
   return (
-    <article className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
+    <article className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
       <Link
         href="/projects"
-        className="group mb-10 inline-flex items-center gap-2 font-mono text-sm text-fg-muted hover:text-fg"
+        className="group mb-10 inline-flex min-h-11 items-center gap-2 text-sm text-fg-muted transition-colors hover:text-fg"
       >
         <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-        cd ../projects
+        All projects
       </Link>
 
-      <header className="hero-rise flex flex-col gap-5 border-b border-border pb-10">
+      <header className="hero-rise flex flex-col gap-6 border-b border-border pb-10">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-fg-muted">
-          <span className="text-highlight">{project.category}</span>
+          <span className="tracking-wide uppercase">{project.category}</span>
           <span aria-hidden="true">·</span>
           <time dateTime={project.publishedAt}>{formatDate(project.publishedAt)}</time>
           <span aria-hidden="true">·</span>
@@ -73,10 +73,10 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           )}
           <ViewCounter slug={project.slug} />
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl">
           {project.title}
         </h1>
-        <p className="max-w-3xl text-lg text-pretty text-fg-muted">{project.summary}</p>
+        <p className="max-w-[60ch] text-xl text-pretty text-fg">{project.summary}</p>
 
         <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
           {project.techStack.map((tech) => (
@@ -122,14 +122,14 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           {project.outcomes.map((o, i) => (
             <Reveal key={o.label} delay={i * 0.06} className="bg-surface p-5">
               <dt className="font-mono text-xs text-fg-muted">{o.label}</dt>
-              <dd className="mt-1 text-2xl font-semibold text-accent">{o.value}</dd>
+              <dd className="mt-1 font-display text-3xl font-semibold text-fg">{o.value}</dd>
             </Reveal>
           ))}
         </dl>
       )}
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_200px]">
-        <div className="prose max-w-none prose-headings:tracking-tight prose-a:underline-offset-4">
+        <div className="prose prose-lg prose-headings:font-display prose-headings:tracking-tight prose-a:underline-offset-4">
           <MDXContent code={project.body} />
         </div>
         <aside className="hidden lg:block">

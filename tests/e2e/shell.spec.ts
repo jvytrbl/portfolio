@@ -38,6 +38,6 @@ test.describe("site shell", () => {
   test("shows a terminal-style 404 page", async ({ page }) => {
     const response = await page.goto("/does-not-exist");
     expect(response?.status()).toBe(404);
-    await expect(page.getByText("cd: no such file or directory")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
   });
 });

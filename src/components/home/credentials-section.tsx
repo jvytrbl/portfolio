@@ -1,105 +1,77 @@
-import { Award, BadgeCheck, GraduationCap, Languages } from "lucide-react";
-import type { ReactNode } from "react";
-import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getCredentials } from "@/lib/content";
 import { formatPeriod, formatYearMonth } from "@/lib/format";
 
-function Card({
-  icon,
-  title,
-  children,
-  delay,
-}: {
-  icon: ReactNode;
-  title: string;
-  children: ReactNode;
-  delay: number;
-}) {
-  return (
-    <Reveal
-      delay={delay}
-      className="flex flex-col gap-4 rounded-xl border border-border bg-surface/60 p-6"
-    >
-      <h3 className="flex items-center gap-2 font-mono text-sm text-highlight [&_svg]:size-4">
-        {icon}
-        {title}
-      </h3>
-      {children}
-    </Reveal>
-  );
-}
+type Entry = { title: string; detail: string; date: string };
 
 export function CredentialsSection() {
   const { education, awards, certifications, languages } = getCredentials();
 
+  const groups: { heading: string; entries: Entry[] }[] = [
+    {
+      heading: "Education",
+      entries: education.map((e) => ({
+        title: e.degree,
+        detail: [e.institution, e.location].filter(Boolean).join(", "),
+        date: e.end ? formatPeriod(e.start, e.end) : `${formatYearMonth(e.start)} – in progress`,
+      })),
+    },
+    {
+      heading: "Certifications",
+      entries: certifications.map((c) => ({
+        title: c.title,
+        detail: c.issuer,
+        date: formatPeriod(c.start, c.end),
+      })),
+    },
+    {
+      heading: "Awards",
+      entries: awards.map((a) => ({
+        title: a.title,
+        detail: a.issuer,
+        date: formatYearMonth(a.date),
+      })),
+    },
+  ].filter((g) => g.entries.length > 0);
+
   return (
-    <section id="credentials" className="scroll-mt-20 py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <SectionHeading index="03" path="credentials" title="Education & credentials" />
-        <div className="grid gap-5 md:grid-cols-2">
-          <Card icon={<GraduationCap />} title="Education" delay={0}>
-            <ul className="space-y-4">
-              {education.map((e) => (
-                <li key={e.degree}>
-                  <p className="font-medium">{e.degree}</p>
-                  <p className="text-sm text-fg-muted">
-                    {e.institution}
-                    {e.location && ` · ${e.location}`}
-                  </p>
-                  <p className="mt-1 font-mono text-xs text-fg-muted">
-                    {e.end
-                      ? formatPeriod(e.start, e.end)
-                      : `${formatYearMonth(e.start)} — in progress`}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </Card>
-
-          {certifications.length > 0 && (
-            <Card icon={<BadgeCheck />} title="Certifications" delay={0.08}>
-              <ul className="space-y-4">
-                {certifications.map((c) => (
-                  <li key={c.title}>
-                    <p className="font-medium">{c.title}</p>
-                    <p className="text-sm text-fg-muted">{c.issuer}</p>
-                    <p className="mt-1 font-mono text-xs text-fg-muted">
-                      {formatPeriod(c.start, c.end)}
-                    </p>
+    <section id="credentials" className="scroll-mt-20 py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading
+          index="03"
+          label="Credentials"
+          title="Education & credentials"
+          size="secondary"
+        />
+        <div className="grid gap-x-12 gap-y-10 border-t border-border pt-8 md:grid-cols-2 lg:grid-cols-4">
+          {groups.map((group) => (
+            <div key={group.heading}>
+              <h3 className="font-mono text-xs tracking-wide text-fg-muted uppercase">
+                {group.heading}
+              </h3>
+              <ul className="mt-3 space-y-4">
+                {group.entries.map((e) => (
+                  <li key={e.title}>
+                    <p className="font-medium text-fg">{e.title}</p>
+                    <p className="text-sm text-fg-muted">{e.detail}</p>
+                    <p className="mt-0.5 font-mono text-xs text-fg-muted">{e.date}</p>
                   </li>
                 ))}
               </ul>
-            </Card>
-          )}
-
-          {awards.length > 0 && (
-            <Card icon={<Award />} title="Awards" delay={0.12}>
-              <ul className="space-y-4">
-                {awards.map((a) => (
-                  <li key={a.title}>
-                    <p className="font-medium">{a.title}</p>
-                    <p className="text-sm text-fg-muted">{a.issuer}</p>
-                    <p className="mt-1 font-mono text-xs text-fg-muted">
-                      {formatYearMonth(a.date)}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          )}
-
+            </div>
+          ))}
           {languages.length > 0 && (
-            <Card icon={<Languages />} title="Languages" delay={0.16}>
-              <ul className="divide-y divide-border/60">
+            <div>
+              <h3 className="font-mono text-xs tracking-wide text-fg-muted uppercase">Languages</h3>
+              <ul className="mt-3 space-y-2">
                 {languages.map((l) => (
-                  <li key={l.name} className="flex justify-between py-2 text-sm first:pt-0">
-                    <span>{l.name}</span>
-                    <span className="font-mono text-xs text-fg-muted">{l.proficiency}</span>
+                  <li key={l.name}>
+                    <span className="font-medium text-fg">{l.name}</span>{" "}
+                    <span className="text-sm text-fg-muted">({l.proficiency.toLowerCase()})</span>
                   </li>
                 ))}
               </ul>
-            </Card>
+            </div>
           )}
         </div>
       </div>

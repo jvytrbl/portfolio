@@ -48,6 +48,18 @@ describe("handleContactSubmission", () => {
     expect(d.verifyTurnstile).toHaveBeenCalledWith("token", "203.0.113.7");
   });
 
+  it("treats subject as optional, defaulting it", async () => {
+    const d = deps();
+    const result = await handleContactSubmission(
+      request({ fields: { ...validFields, subject: "  " } }),
+      d,
+    );
+    expect(result.status).toBe("success");
+    expect(d.saveSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({ subject: "New message from your portfolio" }),
+    );
+  });
+
   it("refuses politely when the integrations aren't configured", async () => {
     const d = deps({ configured: false });
     const result = await handleContactSubmission(request(), d);
@@ -75,9 +87,10 @@ describe("handleContactSubmission", () => {
     expect(result.status).toBe("error");
     if (result.status !== "error") throw new Error();
     expect(result.fieldErrors).toEqual({
-      email: "Please enter a valid email",
-      message: "Message should be at least 10 characters",
+      email: "Enter an email address like name@example.com.",
+      message: "Message needs at least 10 characters.",
     });
+    expect(result.message).toBe("Please fix the 2 highlighted fields.");
     expect(result.values?.email).toBe("not-an-email");
     expect(d.verifyTurnstile).not.toHaveBeenCalled();
   });
@@ -100,7 +113,10 @@ describe("handleContactSubmission", () => {
     });
     const result = await handleContactSubmission(request(), d);
 
-    expect(result).toMatchObject({ status: "error", message: expect.stringMatching(/too many/i) });
+    expect(result).toMatchObject({
+      status: "error",
+      message: expect.stringMatching(/try again in an hour/i),
+    });
     expect(d.saveSubmission).not.toHaveBeenCalled();
   });
 

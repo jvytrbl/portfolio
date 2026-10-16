@@ -2,85 +2,90 @@ import { ArrowRight, Download } from "lucide-react";
 import { Spotlight } from "@/components/motion/spotlight";
 import { Typewriter, type TerminalLine } from "@/components/motion/typewriter";
 import { ButtonLink, buttonClass } from "@/components/ui/button";
-import { getProjects } from "@/lib/content";
 import { RESUME_PATH, hasResume } from "@/lib/resume";
 import { siteConfig } from "@/lib/site";
 
-export function Hero() {
-  const projectCount = getProjects().length;
-  const lines: TerminalLine[] = [
-    { kind: "command", text: "whoami" },
-    { kind: "output", text: `${siteConfig.name} — ${siteConfig.title}` },
-    { kind: "command", text: "cat focus.txt" },
-    { kind: "muted", text: "full-stack · ERP integrations · applied AI · TDD" },
-    { kind: "command", text: "ls ~/projects | wc -l" },
-    { kind: "success", text: `✓ ${projectCount} case studies ready` },
-  ];
+// Proof comes from the Jotex case study; keep these in sync with
+// content/projects/unified-defect-ticketing.mdx.
+const lines: TerminalLine[] = [
+  { kind: "command", text: "cat impact.log" },
+  { kind: "output", lead: "4 departments", text: "use my defect-ticketing system every day" },
+  {
+    kind: "output",
+    lead: "90,000+ records",
+    text: "stay fast after moving pagination server-side",
+  },
+  {
+    kind: "output",
+    lead: "2 production apps",
+    text: "built, shipped and run as the sole engineer",
+  },
+  { kind: "command", text: "whereami" },
+  { kind: "muted", text: `${siteConfig.location} · open to KL & Selangor` },
+];
 
+export function Hero() {
   return (
     <section className="relative isolate overflow-hidden border-b border-border/60">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute -top-40 left-1/2 -z-10 h-[480px] w-[880px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
-      />
       <Spotlight />
 
-      <div className="mx-auto grid max-w-5xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-        <div className="flex flex-col gap-6">
-          {siteConfig.availability && (
-            <p className="hero-rise inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 font-mono text-xs text-fg-muted">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60" />
-                <span className="relative inline-flex size-2 rounded-full bg-success" />
-              </span>
-              {siteConfig.availability}
-            </p>
-          )}
-
-          <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-            {siteConfig.name}
-            <span className="mt-3 block bg-gradient-to-r from-accent to-fg-muted bg-clip-text text-3xl text-transparent sm:text-4xl">
-              {siteConfig.title}
+      <div className="mx-auto grid max-w-6xl gap-14 px-4 pt-20 pb-24 sm:px-6 sm:pt-28 sm:pb-32 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+        <div className="flex flex-col gap-7">
+          <p className="hero-rise flex flex-col gap-1 font-mono text-sm text-fg-muted sm:flex-row sm:items-center sm:gap-3">
+            <span className="text-fg">{siteConfig.name}</span>
+            <span aria-hidden="true" className="hidden sm:inline">
+              ·
             </span>
+            <span>{siteConfig.title}</span>
+          </p>
+
+          <h1 className="font-display text-4xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
+            {siteConfig.headline}
           </h1>
 
           <p
-            className="hero-rise max-w-xl text-lg text-pretty text-fg-muted"
+            className="hero-rise max-w-[52ch] text-lg text-pretty text-fg"
             style={{ animationDelay: "120ms" }}
           >
             {siteConfig.description}
           </p>
 
-          <div className="hero-rise flex flex-wrap gap-3" style={{ animationDelay: "220ms" }}>
+          <div
+            className="hero-rise flex flex-wrap items-center gap-3"
+            style={{ animationDelay: "200ms" }}
+          >
             <ButtonLink href="/projects">
-              View projects <ArrowRight />
+              See the case studies <ArrowRight />
+            </ButtonLink>
+            <ButtonLink href="/#contact" variant="outline">
+              Contact me
             </ButtonLink>
             {hasResume() && (
-              <a href={RESUME_PATH} download className={buttonClass("outline")}>
-                <Download /> Résumé
+              <a href={RESUME_PATH} download className={buttonClass("ghost")}>
+                <Download /> Résumé (PDF)
               </a>
             )}
-            <ButtonLink href="/#contact" variant="ghost">
-              Get in touch
-            </ButtonLink>
           </div>
+
+          {siteConfig.availability && (
+            <p className="flex items-center gap-2 text-sm text-fg-muted">
+              <span aria-hidden="true" className="size-2 rounded-full bg-success" />
+              {siteConfig.availability}
+            </p>
+          )}
         </div>
 
         <div
-          className="hero-rise overflow-hidden rounded-xl border border-border bg-bg-deep/90 font-mono text-sm shadow-2xl shadow-black/40 backdrop-blur"
-          style={{ animationDelay: "320ms" }}
+          className="hero-rise overflow-hidden rounded-xl border border-border bg-bg-deep font-mono text-sm"
+          style={{ animationDelay: "280ms" }}
         >
           <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
-            <span className="size-3 rounded-full bg-danger/80" />
-            <span className="size-3 rounded-full bg-highlight/80" />
-            <span className="size-3 rounded-full bg-success/80" />
-            <span className="ml-2 text-xs text-fg-muted">~/{siteConfig.github.username} — zsh</span>
+            <span className="size-2.5 rounded-full bg-border" />
+            <span className="size-2.5 rounded-full bg-border" />
+            <span className="size-2.5 rounded-full bg-border" />
+            <span className="ml-2 text-xs text-fg-muted">impact.log</span>
           </div>
-          <div className="p-5 leading-relaxed">
+          <div className="p-5 pt-6 leading-relaxed">
             <Typewriter lines={lines} />
           </div>
         </div>

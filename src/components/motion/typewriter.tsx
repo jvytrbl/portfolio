@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 export type TerminalLine = {
   text: string;
   kind: "command" | "output" | "success" | "muted";
+  /** Leading figure rendered in the accent colour, e.g. "4 departments". */
+  lead?: string;
 };
 
 type TypewriterProps = {
@@ -23,14 +25,19 @@ const kindClass: Record<TerminalLine["kind"], string> = {
   muted: "text-fg-muted",
 };
 
+function fullText(line: TerminalLine) {
+  return line.lead ? `${line.lead} ${line.text}` : line.text;
+}
+
 // Types commands character by character and prints outputs instantly, like a
 // real shell. Every line is rendered from the start (invisible until reached)
-// so the block never changes height — zero layout shift. Screen readers get
-// the full transcript immediately.
-export function Typewriter({ lines, speed = 38, startDelay = 400 }: TypewriterProps) {
+// so the block never changes height. Screen readers get the full transcript
+// immediately, and a Skip control finishes the animation on demand.
+export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterProps) {
   const reduceMotion = useReducedMotion();
   const [progress, setProgress] = useState({ line: 0, char: 0 });
-  const done = reduceMotion || progress.line >= lines.length;
+  const [skipped, setSkipped] = useState(false);
+  const done = reduceMotion || skipped || progress.line >= lines.length;
 
   useEffect(() => {
     if (done) return;
@@ -43,8 +50,8 @@ export function Typewriter({ lines, speed = 38, startDelay = 400 }: TypewriterPr
         ? startDelay
         : lineComplete
           ? isCommand
-            ? 280
-            : 120
+            ? 200
+            : 90
           : speed;
 
     const timer = setTimeout(() => {
@@ -56,40 +63,58 @@ export function Typewriter({ lines, speed = 38, startDelay = 400 }: TypewriterPr
   }, [done, lines, progress, speed, startDelay]);
 
   return (
-    <div className="space-y-1">
+    <div className="relative">
       <p className="sr-only">
-        {lines.map((l) => (l.kind === "command" ? `$ ${l.text}` : l.text)).join(". ")}
+        {lines.map((l) => (l.kind === "command" ? `$ ${l.text}` : fullText(l))).join(". ")}
       </p>
-      {lines.map((line, i) => {
-        const visible =
-          done || i < progress.line || (i === progress.line && line.kind === "command");
-        const shown =
-          done || i < progress.line
-            ? line.text
-            : i === progress.line
-              ? line.text.slice(0, progress.char)
-              : "";
-        const typing = !done && i === progress.line && line.kind === "command";
-        return (
-          <p
-            key={i}
-            aria-hidden="true"
-            className={cn(kindClass[line.kind], !visible && "invisible")}
-          >
-            {line.kind === "command" && <span className="text-highlight">$ </span>}
-            <span>{visible ? shown : line.text}</span>
-            {typing && <Caret />}
-          </p>
-        );
-      })}
-      <p aria-hidden="true" className={cn(!done && "invisible")}>
-        <span className="text-highlight">$ </span>
-        <Caret />
-      </p>
+      {!done && (
+        <button
+          type="button"
+          onClick={() => setSkipped(true)}
+          className="absolute -top-11 right-0 rounded px-2 py-1 font-mono text-xs text-fg-muted transition-colors hover:text-fg"
+        >
+          skip
+        </button>
+      )}
+      <div className="space-y-1.5">
+        {lines.map((line, i) => {
+          const reached = done || i < progress.line;
+          const current = !done && i === progress.line;
+          const visible = reached || (current && line.kind === "command");
+          return (
+            <p
+              key={i}
+              aria-hidden="true"
+              className={cn(kindClass[line.kind], !visible && "invisible")}
+            >
+              {line.kind === "command" ? (
+                <>
+                  <span className="text-highlight">$ </span>
+                  {reached ? line.text : current ? line.text.slice(0, progress.char) : line.text}
+                  {current && <Caret />}
+                </>
+              ) : (
+                <>
+                  {line.lead && <span className="font-semibold text-accent">{line.lead} </span>}
+                  {line.text}
+                </>
+              )}
+            </p>
+          );
+        })}
+        <p aria-hidden="true" className={cn(!done && "invisible")}>
+          <span className="text-highlight">$ </span>
+          <Caret blink={done} />
+        </p>
+      </div>
     </div>
   );
 }
 
-function Caret() {
-  return <span className="inline-block w-2 translate-y-0.5 animate-blink text-accent">▍</span>;
+function Caret({ blink = false }: { blink?: boolean }) {
+  return (
+    <span className={cn("inline-block w-2 translate-y-0.5 text-accent", blink && "animate-blink")}>
+      ▍
+    </span>
+  );
 }

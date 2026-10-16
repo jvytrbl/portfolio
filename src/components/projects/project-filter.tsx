@@ -33,7 +33,7 @@ export function ProjectFilter({
               aria-pressed={active === category}
               onClick={() => setActive(category)}
               className={cn(
-                "rounded-full border px-3 py-1 font-mono text-xs transition-colors",
+                "min-h-11 rounded-full border px-4 font-mono text-xs transition-colors",
                 active === category
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border text-fg-muted hover:border-accent/50 hover:text-fg",

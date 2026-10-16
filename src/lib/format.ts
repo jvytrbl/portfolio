@@ -17,7 +17,7 @@ export function formatYearMonth(value: string): string {
   return monthYear.format(new Date(`${value}-01T00:00:00Z`));
 }
 
-/** "2024-03", undefined → "Mar 2024 — Present" */
+/** "2024-03", undefined → "Mar 2024 – Present" (en dash for ranges) */
 export function formatPeriod(start: string, end?: string): string {
-  return `${formatYearMonth(start)} — ${end ? formatYearMonth(end) : "Present"}`;
+  return `${formatYearMonth(start)} – ${end ? formatYearMonth(end) : "Present"}`;
 }

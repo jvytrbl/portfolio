@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("home page", () => {
   test("renders every section with working anchors", async ({ page }) => {
     await page.goto("/");
-    for (const id of ["projects", "experience", "credentials", "skills", "contact"]) {
+    for (const id of ["projects", "experience", "credentials", "skills", "github", "contact"]) {
       await expect(page.locator(`section#${id}`)).toBeAttached();
     }
     await page
@@ -11,7 +11,7 @@ test.describe("home page", () => {
       .getByRole("link", { name: "Skills" })
       .click();
     await expect(page).toHaveURL(/#skills$/);
-    await expect(page.getByRole("heading", { name: "Technical skills" })).toBeInViewport();
+    await expect(page.getByRole("heading", { name: "Technical toolkit" })).toBeInViewport();
   });
 
   test("links featured projects to their case studies", async ({ page }) => {
@@ -51,7 +51,7 @@ test.describe("projects", () => {
     // Unknown slugs render at request time after the static shell starts
     // streaming, so Next.js serves the 404 UI with a noindex tag (soft 404).
     await page.goto("/projects/does-not-exist");
-    await expect(page.getByText("cd: no such file or directory")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
     await expect(page.locator('meta[name="robots"][content*="noindex"]')).toBeAttached();
   });
 
@@ -65,5 +65,18 @@ test.describe("projects", () => {
     ).toBeVisible();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/projects\/vendor-performance-intelligence-platform$/);
+  });
+});
+
+test.describe("hero", () => {
+  test("shows the claim and proof, and the terminal can be skipped", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "I turn messy business workflows into production systems.",
+    );
+    const skip = page.getByRole("button", { name: "skip" });
+    if (await skip.isVisible()) await skip.click();
+    await expect(page.getByText("4 departments", { exact: true }).last()).toBeVisible();
+    await expect(page.getByRole("button", { name: "skip" })).toHaveCount(0);
   });
 });

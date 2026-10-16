@@ -11,8 +11,8 @@
       test-first (Red-Green-Refactor) to catch edge cases before production.
     - Worked within a multi-layered architecture, keeping an isolated legacy SQL Server module
       behind its dedicated data-access layer instead of blurring boundaries for convenience.
-    - Engineered under ISO 27001:2022 Annex A controls — CI/CD security gates, secrets management,
-      and data masking.
+    - Engineered under ISO 27001:2022 Annex A controls (CI/CD security gates, secrets management,
+      and data masking).
   techStack: [Next.js, Prisma, PostgreSQL, SQL Server, TDD]
 
 - company: Jotex Sdn Bhd
@@ -20,12 +20,12 @@
   location: Seremban
   start: 2026-05
   summary: >-
-    Sole engineer who replaced a fabric manufacturer's fragmented defect reporting — spread across
-    WhatsApp groups and manual logs — with a unified ticketing system used daily by sales,
+    Sole engineer who replaced a fabric manufacturer's fragmented defect reporting (spread across
+    WhatsApp groups and manual logs) with a unified ticketing system used daily by sales,
     warehouse, accounts, and purchasing.
   highlights:
-    - Own two production Next.js apps end to end — a mobile-first PWA for field sales and a desktop
-      operations dashboard — on a shared Supabase backend with real-time sync.
+    - Own two production Next.js apps end to end, a mobile-first PWA for field sales and a desktop
+      operations dashboard, on a shared Supabase backend with real-time sync.
     - Architected multi-tenant, role-based access across business units with Microsoft Azure AD SSO.
     - Built an ERP integration pipeline with Microsoft Dynamics Business Central for automated
       service order and credit note generation.

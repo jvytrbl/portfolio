@@ -18,6 +18,8 @@ const projects = defineCollection({
       repoUrl: s.string().url().optional(),
       liveUrl: s.string().url().optional(),
       featured: s.boolean().default(false),
+      // Lower numbers come first among featured projects (the first one leads).
+      order: s.number().int().optional(),
       draft: s.boolean().default(false),
       publishedAt: s.isodate(),
       outcomes: s

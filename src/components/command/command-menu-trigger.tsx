@@ -1,0 +1,58 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { Search } from "lucide-react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { Kbd } from "@/components/ui/kbd";
+
+// The palette (cmdk + Radix Dialog) is only downloaded on first open,
+// keeping it out of the initial JS bundle.
+const CommandMenu = dynamic(() => import("./command-menu").then((m) => m.CommandMenu), {
+  ssr: false,
+});
+
+const subscribeNoop = () => () => {};
+const detectMac = () => /Mac|iPhone|iPad/.test(navigator.platform);
+
+export function CommandMenuTrigger() {
+  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const isMac = useSyncExternalStore(subscribeNoop, detectMac, () => false);
+
+  function show(next: boolean) {
+    if (next) setLoaded(true);
+    setOpen(next);
+  }
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        setLoaded(true);
+        setOpen((prev) => !prev);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => show(true)}
+        aria-label="Open command menu"
+        aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
+        className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface/60 px-2.5 text-sm text-fg-muted transition-colors hover:border-accent/50 hover:text-fg"
+      >
+        <Search className="size-4" />
+        <span className="hidden font-mono text-xs sm:inline">search…</span>
+        <span className="hidden items-center gap-0.5 sm:inline-flex">
+          <Kbd>{isMac ? "⌘" : "Ctrl"}</Kbd>
+          <Kbd>K</Kbd>
+        </span>
+      </button>
+      {loaded && <CommandMenu open={open} onOpenChange={show} />}
+    </>
+  );
+}

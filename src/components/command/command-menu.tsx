@@ -1,0 +1,133 @@
+"use client";
+
+import { Command } from "cmdk";
+import { ArrowRight, Code2, Copy, ExternalLink, Home, Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, type ReactNode } from "react";
+import { useTheme } from "@/components/theme/use-theme";
+import { GithubIcon } from "@/components/ui/github-icon";
+import { siteConfig } from "@/lib/site";
+
+type CommandMenuProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
+  const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
+  const [copied, setCopied] = useState(false);
+
+  function run(action: () => void) {
+    onOpenChange(false);
+    action();
+  }
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(siteConfig.email);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+        onOpenChange(false);
+      }, 900);
+    } catch {
+      window.location.href = `mailto:${siteConfig.email}`;
+    }
+  }
+
+  return (
+    <Command.Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+      label="Command menu"
+      overlayClassName="fixed inset-0 z-50 bg-bg-deep/70 backdrop-blur-sm"
+      contentClassName="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-surface shadow-2xl shadow-black/40"
+    >
+      <div className="flex items-center gap-2 border-b border-border px-4">
+        <span aria-hidden="true" className="font-mono text-sm text-highlight">
+          $
+        </span>
+        <Command.Input
+          placeholder="Type a command or search…"
+          className="h-12 w-full bg-transparent font-mono text-sm text-fg outline-none placeholder:text-fg-muted"
+        />
+      </div>
+      <Command.List className="max-h-80 overflow-y-auto p-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-fg-muted [&_[cmdk-group-heading]]:uppercase">
+        <Command.Empty className="py-8 text-center font-mono text-sm text-fg-muted">
+          command not found
+        </Command.Empty>
+
+        <Command.Group heading="Navigate">
+          <Item icon={<Home />} onSelect={() => run(() => router.push("/"))}>
+            Home
+          </Item>
+          {siteConfig.nav.map((link) => (
+            <Item
+              key={link.href}
+              icon={<ArrowRight />}
+              onSelect={() => run(() => router.push(link.href))}
+            >
+              {link.label}
+            </Item>
+          ))}
+        </Command.Group>
+
+        <Command.Group heading="Actions">
+          <Item icon={<Copy />} onSelect={copyEmail} keywords={["contact", "mail"]}>
+            {copied ? "Copied to clipboard ✓" : "Copy email address"}
+          </Item>
+          <Item
+            icon={theme === "dark" ? <Sun /> : <Moon />}
+            onSelect={() => run(toggleTheme)}
+            keywords={["dark", "light", "mode"]}
+          >
+            Switch to {theme === "dark" ? "light" : "dark"} theme
+          </Item>
+        </Command.Group>
+
+        <Command.Group heading="Links">
+          <Item
+            icon={<GithubIcon />}
+            onSelect={() => run(() => window.open(siteConfig.github.url, "_blank", "noopener"))}
+            trailing={<ExternalLink />}
+          >
+            GitHub profile
+          </Item>
+          <Item
+            icon={<Code2 />}
+            onSelect={() =>
+              run(() => window.open(siteConfig.github.sourceUrl, "_blank", "noopener"))
+            }
+            keywords={["repo", "code"]}
+            trailing={<ExternalLink />}
+          >
+            View source code
+          </Item>
+        </Command.Group>
+      </Command.List>
+    </Command.Dialog>
+  );
+}
+
+type ItemProps = {
+  children: ReactNode;
+  icon: ReactNode;
+  trailing?: ReactNode;
+  keywords?: string[];
+  onSelect: () => void;
+};
+
+function Item({ children, icon, trailing, keywords, onSelect }: ItemProps) {
+  return (
+    <Command.Item
+      onSelect={onSelect}
+      keywords={keywords}
+      className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm text-fg-muted data-[selected=true]:bg-surface-raised data-[selected=true]:text-fg [&_svg]:size-4 [&_svg]:shrink-0"
+    >
+      {icon}
+      <span className="flex-1">{children}</span>
+      {trailing && <span className="text-fg-muted">{trailing}</span>}
+    </Command.Item>
+  );
+}

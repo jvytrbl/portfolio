@@ -112,3 +112,20 @@
 @utility animate-blink {
   animation: blink 1.1s step-end infinite;
 }
+
+/* Shiki code blocks: dark colours are inlined at build time; light theme
+   swaps to the CSS variables Shiki emits for the secondary theme. */
+pre.shiki {
+  background-color: var(--bg-deep) !important;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+[data-theme="light"] .shiki,
+[data-theme="light"] .shiki span {
+  color: var(--shiki-light) !important;
+}

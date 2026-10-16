@@ -1,0 +1,22 @@
+# Placeholder career timeline — newest first. Omit `end` for a current role.
+- company: Example Corp
+  role: Software Engineer
+  location: Kuala Lumpur, MY
+  employmentType: Full-time
+  start: 2024-03
+  summary: Placeholder — building internal platforms that integrate ERP data with modern web apps.
+  highlights:
+    - Placeholder — led the vendor performance platform from prototype to production.
+    - Placeholder — cut quarterly reporting effort by ~80% with automated exports.
+  techStack: [Next.js, TypeScript, SQL Server, Azure]
+
+- company: Sample Solutions
+  role: Junior Developer
+  location: Remote
+  employmentType: Contract
+  start: 2022-06
+  end: 2024-02
+  summary: Placeholder — delivered client web apps and REST API integrations.
+  highlights:
+    - Placeholder — shipped 6 client projects end to end.
+  techStack: [React, Node.js, PostgreSQL]

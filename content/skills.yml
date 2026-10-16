@@ -1,0 +1,27 @@
+# Placeholder skills matrix. level: expert | proficient | familiar
+- category: Frontend
+  items:
+    - { name: TypeScript, level: expert }
+    - { name: React, level: expert }
+    - { name: Next.js, level: expert }
+    - { name: Tailwind CSS, level: proficient }
+
+- category: Backend & Database
+  items:
+    - { name: Node.js, level: proficient }
+    - { name: SQL Server, level: proficient }
+    - { name: PostgreSQL, level: proficient }
+    - { name: REST API design, level: expert }
+
+- category: DevOps & Tooling
+  items:
+    - { name: GitHub Actions, level: proficient }
+    - { name: Vercel, level: proficient }
+    - { name: Docker, level: familiar }
+    - { name: Playwright, level: proficient }
+
+- category: Enterprise Integrations
+  items:
+    - { name: ERP data pipelines, level: proficient }
+    - { name: Azure AD / MSAL, level: proficient }
+    - { name: Excel / PDF reporting, level: expert }

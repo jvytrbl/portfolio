@@ -1,0 +1,31 @@
+---
+title: Engineering Portfolio
+summary: Placeholder — this site. Statically prerendered Next.js App Router with a type-safe MDX content layer and zero-cost hosting.
+category: Open Source
+techStack: [Next.js, React 19, Tailwind CSS, Velite, Supabase]
+role: Designer & developer
+repoUrl: https://github.com/jvytrbl/portfolio
+featured: true
+publishedAt: 2026-10-16
+outcomes:
+  - label: Monthly hosting cost
+    value: "$0"
+  - label: Lighthouse target
+    value: "95+"
+---
+
+<Callout>Placeholder content — replace with your own write-up.</Callout>
+
+## Problem
+
+A portfolio that proves engineering skill, not just lists it — while costing nothing to run.
+
+## Architecture
+
+Content lives in Git as MDX and YAML, validated by Zod schemas at build time and prerendered to
+static HTML. Dynamic features (contact form, view counters) use free-tier Supabase.
+
+## Outcomes
+
+- Every page is static and served from the edge.
+- Content mistakes fail the build instead of breaking production.

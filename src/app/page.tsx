@@ -1,7 +1,14 @@
+import { getExperience, getProjects, getSkills } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
-// Phase 1 placeholder — the full hero and sections land in Phase 3.
+// Placeholder — the full hero and sections land in Phase 3.
 export default function HomePage() {
+  const stats = [
+    `${getProjects().length} projects`,
+    `${getExperience().length} roles`,
+    `${getSkills().length} skill groups`,
+  ].join(" · ");
+
   return (
     <section className="relative overflow-hidden">
       <div
@@ -25,10 +32,10 @@ export default function HomePage() {
           </div>
           <div className="space-y-1 p-4">
             <p>
-              <span className="text-highlight">$</span> npm run build
+              <span className="text-highlight">$</span> velite build
             </p>
-            <p className="text-success">✓ phase 1: foundation ready</p>
-            <p className="text-fg-muted">→ content engine coming next</p>
+            <p className="text-success">✓ content loaded: {stats}</p>
+            <p className="text-fg-muted">→ pages and case studies coming next</p>
             <p>
               <span className="text-highlight">$</span>{" "}
               <span aria-hidden="true" className="animate-blink text-accent">

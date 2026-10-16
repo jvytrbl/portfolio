@@ -1,8 +1,8 @@
 # Portfolio — Engineering Showcase
 
-Personal portfolio designed as an engineering journal: a cinematic cover, case studies
-written as feature articles, and separate Work, About and Contact pages. Next.js App Router,
-statically prerendered. See `DESIGN.md` for the design system.
+Personal portfolio designed as a gallery of work: screenshots lead, giant grotesk headlines
+frame them, with separate Work, About and Contact pages. Next.js App Router, statically
+prerendered. See `DESIGN.md` for the design system.
 
 ## Stack
 
@@ -11,7 +11,7 @@ statically prerendered. See `DESIGN.md` for the design system.
 | Framework | Next.js 16 (App Router, Cache Components), React 19, TypeScript strict |
 | Styling   | Tailwind CSS v4, OKLCH design tokens in `src/app/globals.css`          |
 | Content   | Velite — MDX + YAML validated by Zod schemas, Shiki code highlighting  |
-| UI        | Instrument Serif/Sans, Motion, View Transitions, cmdk, Lucide          |
+| UI        | Inter Tight, Instrument Serif/Sans, Motion, View Transitions, cmdk     |
 | Data      | Supabase Postgres via Drizzle ORM (contact log, view counters)         |
 | Contact   | Server Action + Zod, Cloudflare Turnstile, Resend email                |
 | Env       | `@t3-oss/env-nextjs` + Zod, validated at build time                    |
@@ -68,7 +68,8 @@ role: Lead engineer # optional
 repoUrl: https://github.com/... # optional
 liveUrl: https://... # optional
 featured: true # show on the home page
-order: 1 # optional: featured order; 1 = the large lead project
+order: 1 # optional: display order; 1 = the cover story
+visual: image # or typographic (no screenshots, e.g. internal systems)
 draft: false # true hides it in production
 publishedAt: 2026-10-01
 outcomes: # optional, up to 4 headline metrics
@@ -78,6 +79,27 @@ outcomes: # optional, up to 4 headline metrics
 
 The MDX body supports GitHub-flavoured Markdown, syntax-highlighted code blocks, and the
 `<Callout>` and `<Terminal>` components (see the Jotex case study for a `<Terminal>` example).
+
+### Adding screenshots
+
+1. Put images in `content/projects/images/<project-slug>/` (JPG or PNG; desktop shots at
+   least 1600px wide, ideally 16:10; phone shots 1170×2532 or similar). Use dummy data, never
+   real customer or personal information.
+2. Reference them in the project's frontmatter (paths relative to the `.mdx` file):
+
+```yaml
+cover: ./images/vendor-performance-intelligence-platform/cover.jpg
+gallery:
+  - src: ./images/vendor-performance-intelligence-platform/dashboard.jpg
+    alt: Vendor scorecard dashboard with three benchmark charts
+    caption: Scorecard dashboard
+    device: desktop # or mobile
+```
+
+Until a `cover` exists, the site shows a neutral "Screenshot coming soon" placeholder.
+For work that can't be shown publicly, set `visual: typographic` instead: the project is
+presented with its headline number on an ink tile, and the gallery is skipped.
+See `content/projects/engineering-portfolio.mdx` for a complete example.
 
 ### Résumé
 
@@ -131,11 +153,12 @@ src/
   app/                 routes: / (cover), /work, /work/[slug], /about, /contact
   components/
     about/             career, credentials, toolkit chapters
+    media/             ProjectVisual (screenshot · typographic tile · placeholder)
     command/           Cmd+K palette (lazy-loaded on first open)
-    home/              cover, scroll story, pull quote, closing
-    layout/            header (active nav), colophon footer
+    home/              hero carousel, pinned scroll story
+    layout/            floating pill header, mobile menu, ink footer
     mdx/               MDX renderer + <Callout>, <Terminal>
-    work/              archive index, GitHub section
+    work/              project cards, GitHub section
     theme/             theme hook + toggle
     ui/                small primitives
   app/actions/         Server Actions (contact form)

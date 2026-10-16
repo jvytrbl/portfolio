@@ -12,16 +12,17 @@ test.describe("site shell", () => {
     await expect(nav.getByRole("link", { name: "Work" })).not.toHaveAttribute("aria-current");
   });
 
-  test("defaults to the ink edition and persists a toggle across reloads", async ({ page }) => {
+  test("mobile menu opens inline and navigates", async ({ browser }) => {
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto("/");
-    const html = page.locator("html");
-    await expect(html).toHaveAttribute("data-theme", "dark");
-
-    await page.getByRole("button", { name: "Switch to light theme" }).click();
-    await expect(html).toHaveAttribute("data-theme", "light");
-
-    await page.reload();
-    await expect(html).toHaveAttribute("data-theme", "light");
+    const toggle = page.getByRole("button", { name: "Open menu" });
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await toggle.click();
+    const menu = page.getByRole("navigation", { name: "Mobile" });
+    await menu.getByRole("link", { name: "Work" }).click();
+    await expect(page).toHaveURL(/\/work$/);
+    await expect(menu).toBeHidden();
+    await page.close();
   });
 
   test("opens the command menu with the keyboard", async ({ page }) => {
@@ -37,9 +38,9 @@ test.describe("site shell", () => {
     await expect(dialog).toBeHidden();
   });
 
-  test("shows the editorial 404 page", async ({ page }) => {
+  test("shows the 404 page", async ({ page }) => {
     const response = await page.goto("/does-not-exist");
     expect(response?.status()).toBe(404);
-    await expect(page.getByRole("heading", { name: /out of print/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /not found/i })).toBeVisible();
   });
 });

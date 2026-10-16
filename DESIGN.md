@@ -1,48 +1,44 @@
-# Design system: the engineering journal
+# Design system: the gallery
 
-## Editions and colour (OKLCH, tokens in `src/app/globals.css`)
+Inspired by VSCO and studio portfolios: photos lead, type frames them.
 
-Strategy: **committed**. Ink-indigo carries every surface; crimson is the only accent.
+## Colour (OKLCH, tokens in `src/app/globals.css`)
 
-| Token           | Ink (default)                         | Paper (light)  | Role                                                  |
-| --------------- | ------------------------------------- | -------------- | ----------------------------------------------------- |
-| `bg`            | `#070429` · `oklch(0.15 0.074 277.8)` | warm ivory     | Page                                                  |
-| `fg`            | ivory `oklch(0.94 0.022 85)`          | indigo ink     | Body and headlines                                    |
-| `fg-muted`      | warm grey-ivory                       | grey-indigo    | Metadata, captions                                    |
-| `accent`        | rose `oklch(0.72 0.14 15)`            | crimson        | Links and emphasis read as text (7.5:1 on ink)        |
-| `accent-strong` | crimson `oklch(0.47 0.165 20)`        | crimson        | Fills, rules, bullets, marks; never small text on ink |
-| `border`        | indigo hairline                       | ivory hairline | Rules between items                                   |
-| `highlight`     | gold                                  | amber          | The terminal `$` prompt only                          |
+Strategy: **restrained, light-first**. One accent: ink.
 
-A faint SVG grain overlay gives a printed-stock texture in both editions.
+| Token                               | Value                                  | Role                                                                                                                                                     |
+| ----------------------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bg`                                | warm off-white `oklch(0.975 0.004 85)` | The gallery stage                                                                                                                                        |
+| `surface`, `surface-raised`         | slightly deeper off-whites             | Image placeholders, soft buttons, inputs                                                                                                                 |
+| `fg` / `fg-muted` / `fg-faint`      | ink-tinted near-black → grey           | Type hierarchy                                                                                                                                           |
+| `ink`                               | `#070429` · `oklch(0.15 0.074 277.8)`  | Primary buttons, the "Available for work" pill, and full dark sections: the scroll story, the Jotex typographic tile, the contact email card, the footer |
+| `ink-fg`, `ink-muted`, `ink-border` |                                        | Type and rules inside ink sections                                                                                                                       |
+| `highlight`                         | gold                                   | The terminal `$` prompt only                                                                                                                             |
+
+No pure white or black. No theme toggle: one signature look.
 
 ## Typography
 
-- **Instrument Serif** (`font-serif`): all headlines, large figures, pull quotes. Italic is used
-  for emphasis words ("The _work_", "Write _to me._").
-- **Instrument Sans** (`font-sans`): body text.
-- **IBM Plex Mono** (`font-mono`, `kicker` utility): folios, kickers, captions, uppercase with
-  wide tracking.
-- Scale is dramatic on purpose: cover name up to 14rem; page titles 10rem; section titles 5–7rem.
-- Body measure 60–68ch. Articles get a drop cap on the first paragraph.
+- **Inter Tight** (`font-display`, `display-xl` utility): giant uppercase split headlines
+  ("SELECTED ◯ WORK"), project titles, numbers. Tight tracking (−0.045em).
+- **Instrument Serif italic** (`font-serif italic`): small accents and whispers,
+  e.g. "[ Who I am ]", emphasised phrases inside display sentences.
+- **Instrument Sans** (`font-sans`): body text and small labels (`label` utility).
+- IBM Plex Mono: the single terminal artifact only.
 
 ## Layout
 
-- 12-column editorial grid, container `max-w-7xl`.
-- Hairline rules (`border-border`) separate items instead of cards. No cards anywhere.
-- Kicker row with folio (Nº 01 · 2026) opens the cover; chapters on About use roman numerals.
+- Floating pill navigation, fixed at the top. Mobile: an inline disclosure menu (not a modal).
+- `SplitHeading`: two words pushed to the edges with a small element between them (short words)
+  or below them (long names).
+- Images: `rounded-sm`, full-bleed or near full-bleed, captions underneath in small sans.
+- `ProjectVisual` renders a screenshot (blur-up), a typographic ink tile (`visual: typographic`,
+  for internal systems that can't be shown), or a neutral placeholder.
+- No cards-for-everything: hairline rules separate lists (career, toolkit, repositories).
 
 ## Motion
 
-- Cover lines rise out of a mask (CSS, plays before hydration).
-- Home story chapter is pinned and scroll-linked (Motion `useScroll`/`useTransform`).
-- Pull quote words light up with scroll.
-- Page changes crossfade via React `<ViewTransition>`; project titles morph from the archive
-  into the case-study headline.
-- Transform/opacity only, ease-out-expo; everything disabled under reduced motion.
-
-## Components
-
-- Buttons: `rounded-full`, `min-h-11`; primary = crimson fill.
-- Form fields: `text-base min-h-12`, sentence-case labels with "(required)" / "(optional)".
-- `WorkIndex`: the shared editorial table of contents (Home and /work).
+- Hero carousel: native scroll-snap with arrow buttons; slow image zoom on hover.
+- Pinned ink scroll story; scroll-lit intro paragraph.
+- Page changes crossfade (React `<ViewTransition>`); project images morph between pages.
+- Transform/opacity only, ease-out-expo; disabled under reduced motion.

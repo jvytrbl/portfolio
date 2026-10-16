@@ -1,20 +1,9 @@
 "use client";
 
 import { Command } from "cmdk";
-import {
-  ArrowRight,
-  Code2,
-  Copy,
-  ExternalLink,
-  FolderGit2,
-  Home,
-  Moon,
-  Search,
-  Sun,
-} from "lucide-react";
+import { ArrowRight, Code2, Copy, ExternalLink, FolderGit2, Home, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { useTheme } from "@/components/theme/use-theme";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { siteConfig } from "@/lib/site";
 
@@ -28,7 +17,6 @@ type CommandMenuProps = {
 
 export function CommandMenu({ open, onOpenChange, projects }: CommandMenuProps) {
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
   const [copied, setCopied] = useState(false);
 
   function run(action: () => void) {
@@ -54,8 +42,8 @@ export function CommandMenu({ open, onOpenChange, projects }: CommandMenuProps) 
       open={open}
       onOpenChange={onOpenChange}
       label="Command menu"
-      overlayClassName="fixed inset-0 z-50 bg-bg-deep/70 backdrop-blur-sm"
-      contentClassName="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-lg border border-border bg-bg-deep shadow-2xl shadow-black/50"
+      overlayClassName="fixed inset-0 z-50 bg-ink/40"
+      contentClassName="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-2xl border border-border bg-bg shadow-2xl shadow-ink/20"
     >
       <div className="flex items-center gap-2 border-b border-border px-4">
         <Search aria-hidden="true" className="size-4 text-fg-muted" />
@@ -100,13 +88,6 @@ export function CommandMenu({ open, onOpenChange, projects }: CommandMenuProps) 
         <Command.Group heading="Actions">
           <Item icon={<Copy />} onSelect={copyEmail} keywords={["contact", "mail"]}>
             {copied ? "Copied to clipboard ✓" : "Copy email address"}
-          </Item>
-          <Item
-            icon={theme === "dark" ? <Sun /> : <Moon />}
-            onSelect={() => run(toggleTheme)}
-            keywords={["dark", "light", "mode"]}
-          >
-            Switch to {theme === "dark" ? "light" : "dark"} theme
           </Item>
         </Command.Group>
 

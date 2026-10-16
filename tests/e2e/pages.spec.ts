@@ -1,24 +1,25 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("home", () => {
-  test("opens on the cover and links into the cover story", async ({ page }) => {
+  test("opens on the project carousel and the name", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Muhammad");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Muhammad Hakimi");
+    const carousel = page.getByRole("region", { name: "Selected projects" });
+    await expect(carousel.getByRole("link")).toHaveCount(3);
     await expect(page.getByRole("region", { name: "Before and after" })).toBeAttached();
 
-    await page.getByRole("link", { name: /the cover story/i }).click();
+    await carousel.getByRole("link").first().click();
     await expect(page).toHaveURL(/\/work\/unified-defect-ticketing$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Unified Defect Ticketing System",
     );
   });
 
-  test("lists the featured work in this issue", async ({ page }) => {
+  test("shows selected work with a link to the archive", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "In this issue" })).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: /Vendor Performance Intelligence Platform/ }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Selected Work" })).toBeVisible();
+    await page.getByRole("link", { name: "All work" }).click();
+    await expect(page).toHaveURL(/\/work$/);
   });
 });
 
@@ -29,7 +30,7 @@ test.describe("navigation", () => {
 
     await nav.getByRole("link", { name: "Work" }).click();
     await expect(page).toHaveURL(/\/work$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("The work");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Selected Work");
 
     await nav.getByRole("link", { name: "About" }).click();
     await expect(page).toHaveURL(/\/about$/);
@@ -37,7 +38,7 @@ test.describe("navigation", () => {
 
     await nav.getByRole("link", { name: "Contact" }).click();
     await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Write to me.");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Say Hello");
   });
 
   test("redirects the old /projects URLs", async ({ page }) => {
@@ -61,25 +62,19 @@ test.describe("navigation", () => {
 });
 
 test.describe("work", () => {
-  test("archive lists every case study with the cover story first", async ({ page }) => {
+  test("archive lists every project with the cover story first", async ({ page }) => {
     await page.goto("/work");
-    const items = page.getByRole("main").locator("ol").first().getByRole("listitem");
-    await expect(items).toHaveCount(3);
-    await expect(items.first()).toContainText("Unified Defect Ticketing System");
-    await expect(items.first()).toContainText("01");
+    const cards = page.getByRole("main").getByRole("article");
+    await expect(cards).toHaveCount(3);
+    await expect(cards.first()).toContainText("Unified Defect Ticketing System");
   });
 
-  test("case study renders as a feature with contents and the impact log", async ({ page }) => {
+  test("internal project is shown as type, not screenshots", async ({ page }) => {
     await page.goto("/work/unified-defect-ticketing");
     await expect(page).toHaveTitle(/Unified Defect Ticketing System/);
-    await expect(page.getByRole("region", { name: "By the numbers" })).toContainText("90,000+");
-    await expect(page.locator("pre.shiki").first()).toBeVisible();
-
-    await page
-      .getByRole("navigation", { name: "In this story" })
-      .getByRole("link", { name: "Outcomes" })
-      .click();
-    await expect(page).toHaveURL(/#outcomes$/);
+    await expect(page.getByText("Internal system · shown as type, not screenshots")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Key numbers" })).toContainText("90,000+");
+    await expect(page.getByRole("region", { name: "Screens" })).toHaveCount(0);
 
     const log = page.locator("figure", { hasText: "impact.log" });
     await log.scrollIntoViewIfNeeded();
@@ -88,15 +83,30 @@ test.describe("work", () => {
     await expect(log.getByText("4 departments", { exact: true }).last()).toBeVisible();
   });
 
-  test("shows the not-found page (noindex) for an unknown case study", async ({ page }) => {
+  test("project with screenshots renders its cover and gallery", async ({ page }) => {
+    await page.goto("/work/engineering-portfolio");
+    await expect(page.getByRole("img", { name: "Engineering Portfolio screenshot" })).toBeVisible();
+    const screens = page.getByRole("region", { name: "Screens" });
+    await expect(screens.getByRole("img")).toHaveCount(2);
+    await expect(screens.getByText("Home on mobile")).toBeVisible();
+  });
+
+  test("project without screenshots shows placeholders", async ({ page }) => {
+    await page.goto("/work/vendor-performance-intelligence-platform");
+    await expect(page.getByRole("region", { name: "Screens" })).toContainText(
+      "Screenshot coming soon",
+    );
+  });
+
+  test("shows the not-found page (noindex) for an unknown project", async ({ page }) => {
     // Unknown slugs render after the static shell starts streaming, so Next.js
     // serves the 404 UI with a noindex tag (soft 404).
     await page.goto("/work/does-not-exist");
-    await expect(page.getByRole("heading", { name: /out of print/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /not found/i })).toBeVisible();
     await expect(page.locator('meta[name="robots"][content*="noindex"]')).toBeAttached();
   });
 
-  test("case studies are searchable from the command menu", async ({ page }) => {
+  test("projects are searchable from the command menu", async ({ page }) => {
     await page.goto("/");
     await page.keyboard.press("ControlOrMeta+k");
     await expect(page.getByRole("dialog")).toBeVisible();

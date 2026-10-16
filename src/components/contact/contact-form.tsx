@@ -198,7 +198,7 @@ function Field({
   const hintId = `${id}-hint`;
   const describedBy = [error && errorId, hint && hintId].filter(Boolean).join(" ") || undefined;
   const className = cn(
-    "min-h-12 w-full rounded-sm border bg-bg-deep px-4 py-3 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-fg focus:outline-none",
+    "min-h-12 w-full rounded-sm border bg-surface px-4 py-3 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-fg focus:outline-none",
     error ? "border-danger" : "border-border",
   );
   const shared = {

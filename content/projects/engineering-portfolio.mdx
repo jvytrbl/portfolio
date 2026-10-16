@@ -6,6 +6,16 @@ techStack: [Next.js, React 19, Tailwind CSS, Velite, Supabase]
 role: Designer & developer
 repoUrl: https://github.com/jvytrbl/portfolio
 featured: false
+cover: ./images/engineering-portfolio/cover.jpg
+gallery:
+  - src: ./images/engineering-portfolio/case-study.jpg
+    alt: A project page with a large headline, key numbers and a short story
+    caption: Project page
+    device: desktop
+  - src: ./images/engineering-portfolio/mobile.jpg
+    alt: The home page on a phone, with the project carousel and split headline
+    caption: Home on mobile
+    device: mobile
 publishedAt: 2026-10-16
 outcomes:
   - label: Monthly hosting cost
@@ -16,14 +26,15 @@ outcomes:
 
 ## Problem
 
-A portfolio that proves engineering skill, not just lists it, while costing nothing to run.
+A portfolio that proves engineering skill rather than listing it, while costing nothing to run.
 
-## Architecture
+## Solution
 
 Content lives in Git as MDX and YAML, validated by Zod schemas at build time and prerendered to
-static HTML. Dynamic features (contact form, view counters) use free-tier Supabase.
+static pages. The contact form and view counters run on free-tier Supabase, Resend, and Cloudflare
+Turnstile, with every integration optional so the site always builds.
 
-## Outcomes
+## Outcome
 
-- Every page is static and served from the edge.
-- Content mistakes fail the build instead of breaking production.
+Static pages served from the edge, content mistakes that fail the build instead of production,
+and unit, integration, and end-to-end tests on every push.

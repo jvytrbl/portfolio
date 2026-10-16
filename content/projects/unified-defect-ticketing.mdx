@@ -6,6 +6,7 @@ techStack: [Next.js, Supabase, PWA, Azure AD SSO, Business Central, TypeScript]
 role: Sole engineer · Jotex Sdn Bhd
 featured: true
 order: 1
+visual: typographic
 publishedAt: 2026-05-01
 outcomes:
   - label: Departments using it daily
@@ -18,40 +19,29 @@ outcomes:
 
 ## Problem
 
-Defect reports at a fabric manufacturing company were spread across multiple WhatsApp groups and
-manual logs. Nothing was traceable end to end, and every department kept its own partial picture.
+Defect reports at a fabric manufacturer lived in WhatsApp groups and manual logs. Nothing was
+traceable end to end, and every department kept its own partial picture.
 
 ## Solution
 
-A single ticketing system, now used daily by **sales, warehouse, accounts, and purchasing**. As the
-sole engineer I own architecture, deployment, and ongoing maintenance, and work directly with end
-users to turn real operational workflows into system design.
-
-## Architecture
+As the sole engineer I built one ticketing system now used daily by **sales, warehouse, accounts,
+and purchasing**: a mobile-first PWA for field sales and a desktop dashboard for operations, on a
+shared real-time Supabase backend with Azure AD single sign-on and role-based access across
+business units.
 
 ```txt
-Field sales PWA (mobile-first) ─┐
-                                ├──► Supabase (Postgres + real-time sync)
-Operations dashboard (desktop) ─┘            │
-                                             ▼
-                    ERP pipeline ──► Microsoft Dynamics Business Central
-                                     (service orders · credit notes)
+Field sales PWA ─┐
+                 ├──► Supabase (Postgres + real-time sync)
+Ops dashboard ───┘            │
+                              ▼
+         ERP pipeline ──► Microsoft Dynamics Business Central
+                          (service orders · credit notes)
 ```
 
-- **Two Next.js apps, one backend:** a mobile-first PWA for field sales and a desktop dashboard
-  for internal operations, kept in sync in real time.
-- **Multi-tenant, role-based access** supporting multiple business units, with Microsoft Azure AD
-  single sign-on.
-- **ERP integration** with Business Central for automated service order and credit note
-  generation.
+An ERP pipeline creates service orders and credit notes in Business Central automatically. When a
+90,000+ record data browser began crashing browsers, I moved it to server-side pagination.
 
-## Scaling the data browser
-
-A data browser holding **90,000+ records** started causing browser stability failures. After
-diagnosing the root cause as client-side loading at scale, I redesigned it to use server-side
-pagination, keeping the UI responsive regardless of dataset size.
-
-## Outcomes
+## Outcome
 
 <Terminal
   title="impact.log"
@@ -71,6 +61,5 @@ pagination, keeping the UI responsive regardless of dataset size.
   ]}
 />
 
-- One shared, traceable record of every defect across four departments.
-- ERP documents generated automatically instead of re-keyed by hand.
-- A data browser that stays stable as records grow.
+One traceable record of every defect, ERP documents generated instead of re-keyed, and a data
+browser that stays stable as records grow.

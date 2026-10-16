@@ -18,11 +18,12 @@ type TypewriterProps = {
   startDelay?: number;
 };
 
+// Colours inherit from the container (the terminal sets ink background).
 const kindClass: Record<TerminalLine["kind"], string> = {
-  command: "text-fg",
-  output: "text-fg",
+  command: "",
+  output: "opacity-80",
   success: "text-success",
-  muted: "text-fg-muted",
+  muted: "opacity-60",
 };
 
 function fullText(line: TerminalLine) {
@@ -74,7 +75,7 @@ export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterPr
         <button
           type="button"
           onClick={() => setSkipped(true)}
-          className="absolute -top-11 right-0 rounded px-2 py-1 font-mono text-xs text-fg-muted transition-colors hover:text-fg"
+          className="absolute -top-11 right-0 rounded px-2 py-1 font-mono text-xs opacity-60 transition-opacity hover:opacity-100"
         >
           skip
         </button>
@@ -98,7 +99,7 @@ export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterPr
                 </>
               ) : (
                 <>
-                  {line.lead && <span className="font-semibold text-accent">{line.lead} </span>}
+                  {line.lead && <span className="font-semibold opacity-100">{line.lead} </span>}
                   {line.text}
                 </>
               )}
@@ -116,7 +117,9 @@ export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterPr
 
 function Caret({ blink = false }: { blink?: boolean }) {
   return (
-    <span className={cn("inline-block w-2 translate-y-0.5 text-accent", blink && "animate-blink")}>
+    <span
+      className={cn("inline-block w-2 translate-y-0.5 text-highlight", blink && "animate-blink")}
+    >
       ▍
     </span>
   );

@@ -1,22 +1,25 @@
 import type { ReactNode } from "react";
 
-/** A numbered chapter on the About page: roman numeral, title, then content. */
+/** A numbered section on the About page: (01) label, big title, content. */
 export function Chapter({
-  numeral,
+  number,
   title,
   id,
   children,
 }: {
-  numeral: string;
+  number: string;
   title: string;
   id: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 py-20">
-      <div className="mb-10 flex items-baseline gap-6">
-        <span className="font-serif text-2xl text-accent italic">{numeral}.</span>
-        <h2 id={`${id}-title`} className="font-serif text-5xl leading-none sm:text-6xl">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-28 py-20">
+      <div className="mb-10 grid gap-4 md:grid-cols-12">
+        <p className="font-serif text-lg text-fg-muted italic md:col-span-3">({number})</p>
+        <h2
+          id={`${id}-title`}
+          className="font-display text-5xl font-medium tracking-[-0.045em] uppercase sm:text-7xl md:col-span-9"
+        >
           {title}
         </h2>
       </div>

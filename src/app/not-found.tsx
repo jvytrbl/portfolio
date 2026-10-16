@@ -1,27 +1,31 @@
 import Link from "next/link";
+import { SplitHeading } from "@/components/ui/split-heading";
 
 export default function NotFound() {
   return (
-    <section className="mx-auto flex min-h-[70svh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-8">
-      <p className="kicker">Error 404 · Page not found</p>
-      <h1 className="mt-6 font-serif text-[clamp(3.5rem,11vw,9rem)] leading-[0.88] tracking-[-0.02em]">
-        This page is <em>out of print.</em>
-      </h1>
-      <p className="mt-8 max-w-[50ch] text-lg text-pretty text-fg-muted">
-        It doesn&apos;t exist or has moved. Everything else is still on the shelf.
+    <section className="mx-auto flex min-h-[75svh] max-w-7xl flex-col justify-center px-4 pt-36 pb-24 sm:px-8">
+      <SplitHeading
+        as="h1"
+        left="Not"
+        right="Found"
+        middle={<p className="label">[ Error 404 ]</p>}
+      />
+      <p className="mt-10 max-w-[48ch] text-lg text-pretty text-fg-muted">
+        This page doesn&apos;t exist or has moved.{" "}
+        <em className="font-serif text-fg">Everything else is still here.</em>
       </p>
-      <p className="mt-10 flex flex-wrap gap-x-8 gap-y-2">
+      <p className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/"
-          className="inline-flex min-h-11 items-center text-accent underline-offset-4 hover:underline"
+          className="inline-flex min-h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-ink-fg"
         >
-          Back to the cover
+          Back home
         </Link>
         <Link
           href="/work"
-          className="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+          className="inline-flex min-h-11 items-center rounded-full border border-border px-6 text-sm font-medium"
         >
-          Browse the work
+          See the work
         </Link>
       </p>
     </section>

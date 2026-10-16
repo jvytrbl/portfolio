@@ -44,7 +44,7 @@ export function CommandMenuTrigger({ projects }: { projects: CommandProject[] })
         onClick={() => show(true)}
         aria-label="Open command menu"
         aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
-        className="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-sm px-2 text-sm text-fg-muted transition-colors hover:text-fg"
+        className="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-full px-3 text-sm text-fg-muted transition-colors hover:text-fg"
       >
         <Search className="size-4" />
         <span className="hidden items-center gap-0.5 lg:inline-flex">

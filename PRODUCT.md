@@ -24,17 +24,18 @@ departments, with two production apps and a 90,000+ record data browser.
 
 ## Brand and tone
 
-- Concept: **an engineering journal**. Premium, academic, editorial; "university press", not
-  "developer template". Case studies read like feature articles.
-- Plain, confident, specific. Numbers over adjectives. No hype.
-- Ink edition (#070429 indigo, ivory type, crimson details) is the default; a warm "paper"
-  edition is the light theme.
-- One terminal moment only: the `impact.log` artifact inside the Jotex case study.
+- Concept: **a gallery of work**, inspired by VSCO and studio portfolios. Screenshots lead;
+  giant grotesk headlines and small serif-italic accents frame them.
+- Light-first off-white stage; #070429 ink is the only accent and the colour of the deliberate
+  dark sections.
+- Plain, confident, specific. Numbers over adjectives.
+- Internal systems (Jotex, Enviros) are never shown as screenshots. Jotex is told through
+  typography, its diagram, and the single `impact.log` terminal artifact.
 
 ## Structure
 
-A real multi-page site: Home (cinematic cover and scroll story) → Work (archive + case
-studies) → About (profile, career, credentials, toolkit) → Contact.
+Home (project carousel, name, intro, pinned ink story, selected work) → Work (archive + project
+pages: visual showcase plus a short Problem → Solution → Outcome story) → About → Contact.
 
 ## Anti-references
 

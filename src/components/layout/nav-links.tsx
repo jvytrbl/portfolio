@@ -5,32 +5,37 @@ import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+export function isActive(pathname: string, href: string) {
+  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
 /** Primary navigation with the current section marked (aria-current). */
-export function NavLinks() {
+export function NavLinks({
+  className,
+  onNavigate,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
-    <ul className="flex items-center">
+    <ul className={className}>
       {siteConfig.nav.map((link) => {
-        const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+        const active = isActive(pathname, link.href);
         return (
           <li key={link.href}>
             <Link
               href={link.href}
+              onClick={onNavigate}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative flex min-h-11 items-center px-2 text-sm transition-colors sm:px-4",
+                "flex min-h-11 items-center rounded-full px-3.5 text-sm transition-colors",
                 active ? "text-fg" : "text-fg-muted hover:text-fg",
               )}
             >
+              {active && <span aria-hidden="true" className="mr-1.5 size-1 rounded-full bg-ink" />}
               {link.label}
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute inset-x-2 bottom-2 h-px origin-left bg-accent-strong transition-transform duration-500 ease-out-expo sm:inset-x-4",
-                  active ? "scale-x-100" : "scale-x-0",
-                )}
-              />
             </Link>
           </li>
         );

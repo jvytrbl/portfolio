@@ -6,12 +6,12 @@ import { Typewriter, type TerminalLine } from "@/components/motion/typewriter";
  */
 export function Terminal({ title, lines }: { title: string; lines: TerminalLine[] }) {
   return (
-    <figure className="not-prose my-12 overflow-hidden rounded-md border border-border bg-bg-deep font-mono text-sm">
-      <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
-        <span className="size-2.5 rounded-full bg-border" />
-        <span className="size-2.5 rounded-full bg-border" />
-        <span className="size-2.5 rounded-full bg-border" />
-        <figcaption className="ml-2 text-xs text-fg-muted">{title}</figcaption>
+    <figure className="not-prose my-12 overflow-hidden rounded-sm bg-ink font-mono text-sm text-ink-fg">
+      <div className="flex items-center gap-1.5 border-b border-ink-border px-4 py-3">
+        <span className="size-2.5 rounded-full bg-ink-border" />
+        <span className="size-2.5 rounded-full bg-ink-border" />
+        <span className="size-2.5 rounded-full bg-ink-border" />
+        <figcaption className="ml-2 text-xs text-ink-muted">{title}</figcaption>
       </div>
       <div className="p-5 pt-6 leading-relaxed">
         <Typewriter lines={lines} />

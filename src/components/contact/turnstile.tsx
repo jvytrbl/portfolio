@@ -2,7 +2,6 @@
 
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "@/components/theme/use-theme";
 
 type TurnstileApi = {
   render: (el: HTMLElement, options: Record<string, unknown>) => string;
@@ -35,7 +34,6 @@ export function Turnstile({ siteKey, resetKey, onVerifiedChange }: TurnstileProp
   const widgetId = useRef<string | null>(null);
   const callback = useRef(onVerifiedChange);
   const [ready, setReady] = useState(() => typeof window !== "undefined" && !!window.turnstile);
-  const { theme } = useTheme();
 
   useEffect(() => {
     callback.current = onVerifiedChange;
@@ -45,7 +43,7 @@ export function Turnstile({ siteKey, resetKey, onVerifiedChange }: TurnstileProp
     if (!ready || !container.current || !window.turnstile) return;
     widgetId.current = window.turnstile.render(container.current, {
       sitekey: siteKey,
-      theme,
+      theme: "light",
       size: "flexible",
       callback: () => callback.current(true),
       "expired-callback": () => callback.current(false),
@@ -56,7 +54,7 @@ export function Turnstile({ siteKey, resetKey, onVerifiedChange }: TurnstileProp
       widgetId.current = null;
       callback.current(false);
     };
-  }, [ready, siteKey, theme]);
+  }, [ready, siteKey]);
 
   useEffect(() => {
     if (!widgetId.current) return;

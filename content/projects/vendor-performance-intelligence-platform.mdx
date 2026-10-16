@@ -29,58 +29,20 @@ outcomes:
 
 ## Problem
 
-Vendor performance reporting needed to be trustworthy enough to act on. Two risks stood out:
-incomplete vendor records being silently shown as poor performance, and AI-generated summaries
-inventing or miscalculating figures.
+Vendor reports had to be trustworthy enough to act on. Two risks stood out: incomplete records
+being read as poor performance, and AI summaries inventing or miscalculating figures.
 
-## Requirements first
+## Solution
 
-The project started from a formal User Requirements Document, taken through multiple rounds of
-revision to sign-off by a senior engineer. The goal was requirements precise enough to be
-**testable**, not aspirational.
+Starting from a formal requirements document signed off by a senior engineer, I modelled three
+benchmarks (delivery time, pricing, and order accuracy) with deliberate handling of _missing_
+versus _zero_ data. Every number is calculated by the application; the Gemini API only writes the
+narrative, and a validation step checks its output against the source data before anything is
+finalised. Retries with backoff, a circuit breaker, schema-constrained output, and full
+interaction logging keep it reliable when the AI provider isn't.
 
-## Architecture
+## Outcome
 
-```txt
-Vendor data ──► data model (3 benchmarks) ──► scoring in application code
-                                                    │
-                                                    ▼
-                         Gemini API ◄── computed figures only (schema-constrained)
-                              │
-                              ▼
-            validation against source data ──► finalised report
-```
-
-### Data model
-
-Three performance benchmarks (**delivery time**, **pricing**, and **order accuracy**) with
-deliberate handling of _missing_ versus _zero_ data, so the system never silently misrepresents an
-incomplete vendor record.
-
-### AI that narrates, never calculates
-
-All numbers are computed by the application. The AI only writes the narrative around figures that
-already exist, and a validation step checks its output against the source data before anything is
-finalised.
-
-The integration itself is engineered defensively:
-
-- Retry logic with exponential backoff
-- Circuit-breaker protection when the provider is unhealthy
-- Schema-constrained output
-- Full interaction logging
-
-## Testing strategy
-
-A multi-layered strategy built from scratch:
-
-- **Vitest** for unit and integration tests
-- **Playwright** for end-to-end browser tests
-- **Stryker** mutation testing to prove the suite catches real bugs rather than passing
-  superficially
-
-## Infrastructure & security
-
-Provisioned and secured independently as the sole engineer: Azure AD app registration, Azure SQL
-Database, Key Vault for credentials and secrets, and role-based access control scoped to least
-privilege, plus budget alerts and version control on GitHub.
+A tested, secured system I provisioned alone on Azure (AD, SQL Database, Key Vault, least-privilege
+RBAC), verified by unit and integration tests in Vitest, end-to-end tests in Playwright, and
+Stryker mutation testing to prove the tests catch real bugs.

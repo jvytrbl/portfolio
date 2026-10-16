@@ -26,7 +26,21 @@ const projects = defineCollection({
         .array(s.object({ label: s.string(), value: s.string() }))
         .max(4)
         .default([]),
+      // Screenshots. Paths are relative to the MDX file, e.g. ./images/vendor/cover.png.
+      // Without a cover the site shows a neutral placeholder (or, with
+      // `visual: typographic`, a type-only tile for projects that can't be shown).
       cover: s.image().optional(),
+      visual: s.enum(["image", "typographic"]).default("image"),
+      gallery: s
+        .array(
+          s.object({
+            src: s.image(),
+            alt: s.string(),
+            caption: s.string().optional(),
+            device: s.enum(["desktop", "mobile"]).default("desktop"),
+          }),
+        )
+        .default([]),
       metadata: s.metadata(),
       toc: s.toc(),
       body: s.mdx(),
@@ -115,8 +129,7 @@ export default defineConfig({
       [
         rehypeShiki,
         {
-          themes: { dark: "github-dark-default", light: "github-light-default" },
-          defaultColor: "dark",
+          theme: "github-light-default",
         },
       ],
     ],

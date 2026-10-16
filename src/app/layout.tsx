@@ -1,13 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Instrument_Sans, Instrument_Serif } from "next/font/google";
+import { IBM_Plex_Mono, Instrument_Sans, Instrument_Serif, Inter_Tight } from "next/font/google";
 import { ViewTransition } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { env } from "@/env";
 import { siteConfig } from "@/lib/site";
-import { DEFAULT_THEME, themeInitScript } from "@/lib/theme";
 import "./globals.css";
+
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -21,10 +26,11 @@ const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
 });
 
+// Only used by the single terminal artifact.
 const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -37,25 +43,20 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070429",
-  colorScheme: "dark light",
+  themeColor: "#f8f6f2",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      data-theme={DEFAULT_THEME}
-      suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${instrumentSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${interTight.variable} ${instrumentSerif.variable} ${instrumentSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="flex min-h-full flex-col font-sans">
         <a
           href="#main"
-          className="sr-only z-50 rounded-sm bg-accent-strong px-3 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+          className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-ink-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
         >
           Skip to content
         </a>

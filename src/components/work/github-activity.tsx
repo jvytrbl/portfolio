@@ -11,10 +11,10 @@ const HEATMAP_WEEKS = 53;
 
 const levelClass: Record<ContributionDay["level"], string> = {
   0: "bg-border/50",
-  1: "bg-accent/25",
-  2: "bg-accent/50",
-  3: "bg-accent/75",
-  4: "bg-accent",
+  1: "bg-ink/25",
+  2: "bg-ink/50",
+  3: "bg-ink/75",
+  4: "bg-ink",
 };
 
 export async function GithubActivity() {
@@ -24,8 +24,10 @@ export async function GithubActivity() {
     <section id="github" className="mx-auto max-w-7xl px-4 py-28 sm:px-8">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_2fr]">
         <div className="min-w-0">
-          <p className="kicker">From the workshop</p>
-          <h2 className="mt-3 font-serif text-5xl leading-none sm:text-6xl">On GitHub</h2>
+          <p className="font-serif text-lg text-fg-muted italic">[ From the workshop ]</p>
+          <h2 className="mt-3 font-display text-5xl font-medium tracking-[-0.045em] uppercase sm:text-6xl">
+            On GitHub
+          </h2>
           <p className="mt-5 max-w-[40ch] text-pretty text-fg-muted">
             Live from the GitHub API, refreshed every hour.
           </p>
@@ -51,7 +53,7 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
       <dl className="flex flex-wrap gap-x-12 gap-y-4">
         {stats.map((s) => (
           <div key={s.label}>
-            <dd className="font-serif text-5xl text-fg tabular-nums">
+            <dd className="font-display text-5xl font-medium tracking-[-0.04em] text-fg tabular-nums">
               {s.value.toLocaleString("en-US")}
             </dd>
             <dt className="text-sm text-fg-muted">{s.label}</dt>
@@ -62,7 +64,7 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
       {overview.contributions && <Heatmap weeks={overview.contributions.weeks} />}
 
       <div>
-        <h3 className="mb-3 kicker">
+        <h3 className="mb-3 label">
           {overview.source === "pinned" ? "Pinned repositories" : "Recently active repositories"}
         </h3>
         {overview.repos.length > 0 ? (
@@ -99,7 +101,7 @@ function RepoRow({ repo }: { repo: GithubRepo }) {
             href={repo.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors group-hover:text-accent after:absolute after:inset-0"
+            className="transition-colors group-hover:underline after:absolute after:inset-0"
           >
             {repo.name}
           </a>

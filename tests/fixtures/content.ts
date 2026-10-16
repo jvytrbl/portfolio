@@ -13,6 +13,8 @@ function project(
     category: "Full-Stack",
     techStack: ["Next.js"],
     outcomes: [],
+    visual: "image",
+    gallery: [],
     metadata: { readingTime: 1, wordCount: 10 },
     toc: [],
     body: "",

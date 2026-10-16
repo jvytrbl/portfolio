@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { SplitHeading } from "@/components/ui/split-heading";
 import { GithubActivity } from "@/components/work/github-activity";
-import { WorkIndex } from "@/components/work/work-index";
+import { ProjectFeature } from "@/components/work/project-feature";
 import { getProjects } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Engineering case studies: the problem, the architecture, and the outcome.",
+  description: "Selected projects: production systems, ERP integrations and applied AI.",
 };
 
 export default function WorkPage() {
@@ -13,20 +14,22 @@ export default function WorkPage() {
 
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 pt-16 pb-24 sm:px-8 sm:pt-24">
-        <header className="mb-14 grid gap-8 md:grid-cols-12 md:items-end">
-          <div className="md:col-span-7">
-            <p className="kicker">The archive · {projects.length} case studies</p>
-            <h1 className="mt-4 font-serif text-[clamp(4rem,12vw,10rem)] leading-[0.86] tracking-[-0.02em]">
-              The <em>work</em>
-            </h1>
-          </div>
-          <p className="text-xl text-pretty text-fg md:col-span-5">
-            Production systems, written up like feature stories: what was broken, how I designed the
-            fix, and what changed for the people using it.
-          </p>
-        </header>
-        <WorkIndex projects={projects} />
+      <section className="mx-auto max-w-7xl px-4 pt-36 pb-28 sm:px-8 sm:pt-44">
+        <SplitHeading
+          as="h1"
+          left="Selected"
+          right="Work"
+          middle={<p className="label">[ {projects.length} projects ]</p>}
+        />
+        <p className="mt-10 max-w-[56ch] text-lg text-pretty text-fg-muted">
+          Production systems and the thinking behind them. Each project shows what was broken, what
+          I built, and what changed for the people using it.
+        </p>
+        <div className="mt-20 grid gap-x-8 gap-y-24 lg:grid-cols-2">
+          {projects.map((project, i) => (
+            <ProjectFeature key={project.slug} project={project} index={i} />
+          ))}
+        </div>
       </section>
       <GithubActivity />
     </>

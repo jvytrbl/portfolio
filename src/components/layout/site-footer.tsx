@@ -8,51 +8,70 @@ async function CurrentYear() {
   return <>{new Date().getFullYear()}</>;
 }
 
-// Colophon-style footer, as at the back of a printed journal.
+// Ink footer: one of the deliberate dark moments.
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-8 md:grid-cols-12">
-        <div className="md:col-span-5">
-          <p className="font-serif text-3xl">{siteConfig.legalName}</p>
-          <p className="mt-2 text-fg-muted">
-            {siteConfig.title} · {siteConfig.location}
-          </p>
-        </div>
-        <nav aria-label="Footer" className="md:col-span-3">
-          <p className="kicker">Sections</p>
-          <ul className="mt-3 space-y-1">
-            {[{ label: "Home", href: "/" }, ...siteConfig.nav].map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="inline-flex min-h-9 items-center transition-colors hover:text-accent"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="md:col-span-4">
-          <p className="kicker">Colophon</p>
-          <p className="mt-3 text-sm text-pretty text-fg-muted">
-            Set in Instrument Serif and Instrument Sans. Built with Next.js, written in MDX, hosted
-            on free tiers. Issue Nº {siteConfig.edition.issue}, © <CurrentYear />.
-          </p>
-          <p className="mt-4 flex gap-5 text-sm">
-            <a href={`mailto:${siteConfig.email}`} className="transition-colors hover:text-accent">
-              Email
-            </a>
-            <a
-              href={siteConfig.github.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-accent"
+    <footer className="bg-ink text-ink-fg">
+      <div className="mx-auto max-w-7xl px-4 pt-20 pb-10 sm:px-8">
+        <div className="grid gap-12 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <p className="font-serif text-4xl leading-tight italic sm:text-5xl">
+              Let&apos;s build something people use every day.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-8 inline-flex min-h-11 items-center rounded-full bg-ink-fg px-6 text-sm font-medium text-ink transition-opacity hover:opacity-85"
             >
-              GitHub
-            </a>
-          </p>
+              Start a conversation
+            </Link>
+          </div>
+          <nav aria-label="Footer" className="md:col-span-3 md:col-start-8">
+            <p className="text-xs text-ink-muted">Pages</p>
+            <ul className="mt-3 space-y-1">
+              {siteConfig.nav.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="inline-flex min-h-9 items-center hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="md:col-span-2">
+            <p className="text-xs text-ink-muted">Elsewhere</p>
+            <ul className="mt-3 space-y-1">
+              <li>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="inline-flex min-h-9 items-center hover:underline"
+                >
+                  Email
+                </a>
+              </li>
+              <li>
+                <a
+                  href={siteConfig.github.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-9 items-center hover:underline"
+                >
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p className="mt-20 display-xl text-[clamp(3.5rem,15vw,13rem)] text-ink-fg/95">Hakimi.</p>
+        <div className="mt-8 flex flex-wrap justify-between gap-4 border-t border-ink-border pt-6 text-xs text-ink-muted">
+          <span>
+            {siteConfig.legalName} · {siteConfig.location}
+          </span>
+          <span>
+            © <CurrentYear />
+          </span>
         </div>
       </div>
     </footer>

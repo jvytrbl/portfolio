@@ -11,6 +11,8 @@ prerendered, dark-first terminal aesthetic.
 | Styling   | Tailwind CSS v4, design tokens in `src/app/globals.css`                |
 | Content   | Velite — MDX + YAML validated by Zod schemas, Shiki code highlighting  |
 | UI        | cmdk (command palette), Lucide icons, Motion                           |
+| Data      | Supabase Postgres via Drizzle ORM (contact log, view counters)         |
+| Contact   | Server Action + Zod, Cloudflare Turnstile, Resend email                |
 | Env       | `@t3-oss/env-nextjs` + Zod, validated at build time                    |
 | Testing   | Vitest + Testing Library (unit), Playwright (e2e)                      |
 | CI        | GitHub Actions — lint, format, typecheck, test, build, e2e             |
@@ -28,16 +30,17 @@ Open http://localhost:3000. Press `Ctrl+K` (`⌘K` on macOS) for the command pal
 
 ## Scripts
 
-| Script              | Purpose                               |
-| ------------------- | ------------------------------------- |
-| `npm run dev`       | Start the dev server                  |
-| `npm run build`     | Production build                      |
-| `npm run lint`      | ESLint                                |
-| `npm run format`    | Prettier (write)                      |
-| `npm run content`   | Compile content with Velite           |
-| `npm run typecheck` | Build content, route types, run `tsc` |
-| `npm test`          | Unit tests (Vitest)                   |
-| `npm run test:e2e`  | E2E tests (Playwright, needs a build) |
+| Script               | Purpose                               |
+| -------------------- | ------------------------------------- |
+| `npm run dev`        | Start the dev server                  |
+| `npm run build`      | Production build                      |
+| `npm run lint`       | ESLint                                |
+| `npm run format`     | Prettier (write)                      |
+| `npm run content`    | Compile content with Velite           |
+| `npm run typecheck`  | Build content, route types, run `tsc` |
+| `npm test`           | Unit + integration tests (Vitest)     |
+| `npm run db:migrate` | Apply database migrations             |
+| `npm run test:e2e`   | E2E tests (Playwright, needs a build) |
 
 First-time Playwright setup: `npx playwright install chromium`.
 
@@ -79,6 +82,46 @@ The MDX body supports GitHub-flavoured Markdown, syntax-highlighted code blocks,
 Drop your PDF at `public/resume.pdf`. The hero's "Résumé" download button appears
 automatically on the next build — it stays hidden until the file exists.
 
+## Integrations
+
+Everything works without these — features whose keys are missing show a
+"not configured" state instead of failing. Put values in `.env.local` locally
+(copy `.env.example`) and in Vercel → Settings → Environment Variables in production.
+**Never commit keys or paste them into issues/chats.**
+
+| Service              | Powers                                    | Variables                                                |
+| -------------------- | ----------------------------------------- | -------------------------------------------------------- |
+| Supabase             | Contact log, rate limiting, view counters | `DATABASE_URL`                                           |
+| Resend               | Contact notification email                | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`                     |
+| Cloudflare Turnstile | Spam protection on the contact form       | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` |
+| GitHub (optional)    | Pinned repos + contribution graph         | `GITHUB_TOKEN` (fine-grained, no permissions needed)     |
+
+The contact form switches on only when Supabase, Resend **and** Turnstile are all set.
+
+### Setup checklist
+
+1. **Resend** — sign up with the address in `CONTACT_TO_EMAIL` (until you verify a
+   domain, Resend only delivers to your own sign-up address) → API Keys → create a
+   "Sending access" key.
+2. **Supabase** — new project (region: Southeast Asia / Singapore) → **Connect** →
+   copy the **Transaction pooler** string (port 6543) into `DATABASE_URL`, replacing
+   `[YOUR-PASSWORD]`.
+3. **Create the tables** — either run `npm run db:migrate` (reads `.env.local`), or
+   open Supabase → SQL Editor and run the contents of `drizzle/0000_init.sql`.
+   Tables have row-level security enabled, so Supabase's public API can't read them.
+4. **Cloudflare Turnstile** — Turnstile → Add widget → hostnames `localhost` plus your
+   production domain → Managed mode → copy site + secret keys.
+5. **Keep Supabase awake** — free projects pause after a week idle. Once deployed, add
+   a repository variable `SITE_URL` (GitHub → Settings → Secrets and variables →
+   Actions → Variables); the `keep-alive` workflow then pings `/api/health` twice a week.
+
+Contact messages are readable in Supabase → Table Editor → `contact_submissions`.
+
+### Rate limits
+
+3 messages per visitor per hour and 50 per day site-wide (keeps well inside Resend's
+free 100/day). Visitor IPs are stored only as a keyed hash.
+
 ## Project structure
 
 ```
@@ -90,12 +133,17 @@ src/
     mdx/               MDX renderer + components usable inside MDX
     theme/             theme hook + toggle
     ui/                small primitives
-  lib/                 content layer, site config, theme store, utilities
+  app/actions/         Server Actions (contact form)
+  app/api/             route handlers (view counter, health check)
+  db/                  Drizzle schema + client
+  lib/                 content layer, contact pipeline, GitHub client, utilities
   env.ts               environment variable schema
+drizzle/               generated SQL migrations
 content/               MDX + YAML content (see "Editing content")
 velite.config.ts       content schemas
 tests/
   fixtures/            stand-in content for unit tests
   unit/                Vitest
+  integration/         Vitest against real Postgres (set TEST_DATABASE_URL)
   e2e/                 Playwright
 ```

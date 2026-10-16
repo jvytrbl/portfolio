@@ -24,15 +24,23 @@ departments, with two production apps and a 90,000+ record data browser.
 
 ## Brand and tone
 
+- Concept: **an engineering journal**. Premium, academic, editorial; "university press", not
+  "developer template". Case studies read like feature articles.
 - Plain, confident, specific. Numbers over adjectives. No hype.
-- The developer-terminal look is intentional: keep it, but as one gesture (the hero
-  `impact.log` terminal), not a costume on every element.
-- Dark by default (base #080e2e), with a light theme.
+- Ink edition (#070429 indigo, ivory type, crimson details) is the default; a warm "paper"
+  edition is the light theme.
+- One terminal moment only: the `impact.log` artifact inside the Jotex case study.
+
+## Structure
+
+A real multi-page site: Home (cinematic cover and scroll story) → Work (archive + case
+studies) → About (profile, career, credentials, toolkit) → Contact.
 
 ## Anti-references
 
 - Generic "terminal portfolio" templates: ~/paths on every heading, `cd ~` jokes, blinking cursors
   everywhere, typewriters that hide the content.
+- One long landing page where every section competes; same-template sections repeated.
 - SaaS hero-metric templates, gradient text, glass cards, identical card grids.
 
 ## Principles

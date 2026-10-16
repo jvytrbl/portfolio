@@ -1,18 +1,29 @@
-import { ArrowLeft } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="mx-auto flex max-w-6xl flex-col items-start gap-5 px-4 py-32 sm:px-6">
-      <p className="font-mono text-sm text-fg-muted">Error 404</p>
-      <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Page not found</h1>
-      <p className="max-w-[55ch] text-lg text-fg-muted">
-        This page doesn&apos;t exist or has moved. The case studies and contact details are all on
-        the home page.
+    <section className="mx-auto flex min-h-[70svh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-8">
+      <p className="kicker">Error 404 · Page not found</p>
+      <h1 className="mt-6 font-serif text-[clamp(3.5rem,11vw,9rem)] leading-[0.88] tracking-[-0.02em]">
+        This page is <em>out of print.</em>
+      </h1>
+      <p className="mt-8 max-w-[50ch] text-lg text-pretty text-fg-muted">
+        It doesn&apos;t exist or has moved. Everything else is still on the shelf.
       </p>
-      <ButtonLink href="/" variant="outline">
-        <ArrowLeft /> Back to home
-      </ButtonLink>
+      <p className="mt-10 flex flex-wrap gap-x-8 gap-y-2">
+        <Link
+          href="/"
+          className="inline-flex min-h-11 items-center text-accent underline-offset-4 hover:underline"
+        >
+          Back to the cover
+        </Link>
+        <Link
+          href="/work"
+          className="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+        >
+          Browse the work
+        </Link>
+      </p>
     </section>
   );
 }

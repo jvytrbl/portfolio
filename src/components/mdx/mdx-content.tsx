@@ -1,9 +1,10 @@
 import * as runtime from "react/jsx-runtime";
 import type { ComponentType, ReactNode } from "react";
 import { Callout } from "./callout";
+import { Terminal } from "./terminal";
 
 // Components available inside every MDX file without importing them.
-const sharedComponents = { Callout };
+const sharedComponents = { Callout, Terminal };
 
 type MDXComponents = Record<string, ComponentType<never>>;
 type MDXRender = (props: { components?: MDXComponents }) => ReactNode;

@@ -1,7 +1,7 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useInView, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type TerminalLine = {
@@ -35,12 +35,15 @@ function fullText(line: TerminalLine) {
 // immediately, and a Skip control finishes the animation on demand.
 export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterProps) {
   const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  // Typing starts only once the block is on screen.
+  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
   const [progress, setProgress] = useState({ line: 0, char: 0 });
   const [skipped, setSkipped] = useState(false);
   const done = reduceMotion || skipped || progress.line >= lines.length;
 
   useEffect(() => {
-    if (done) return;
+    if (done || !inView) return;
     const current = lines[progress.line];
     const isCommand = current.kind === "command";
     const lineComplete = !isCommand || progress.char >= current.text.length;
@@ -60,10 +63,10 @@ export function Typewriter({ lines, speed = 28, startDelay = 250 }: TypewriterPr
       );
     }, delay);
     return () => clearTimeout(timer);
-  }, [done, lines, progress, speed, startDelay]);
+  }, [done, inView, lines, progress, speed, startDelay]);
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <p className="sr-only">
         {lines.map((l) => (l.kind === "command" ? `$ ${l.text}` : fullText(l))).join(". ")}
       </p>

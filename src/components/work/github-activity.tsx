@@ -1,7 +1,6 @@
 import { Star } from "lucide-react";
 import { buttonClass } from "@/components/ui/button";
 import { GithubIcon } from "@/components/ui/github-icon";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { formatDate } from "@/lib/format";
 import { getGithubOverview } from "@/lib/github/fetch";
 import type { ContributionDay, GithubOverview, GithubRepo } from "@/lib/github/transform";
@@ -22,16 +21,16 @@ export async function GithubActivity() {
   const overview = await getGithubOverview();
 
   return (
-    <section id="github" className="scroll-mt-20 border-y border-border/60 bg-bg-deep/60 py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading
-          index="05"
-          label="GitHub"
-          title="Open source activity"
-          description="Live from the GitHub API, refreshed every hour."
-          size="secondary"
-        />
-        {overview ? <GithubActivityView overview={overview} /> : <Fallback />}
+    <section id="github" className="mx-auto max-w-7xl px-4 py-28 sm:px-8">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_2fr]">
+        <div className="min-w-0">
+          <p className="kicker">From the workshop</p>
+          <h2 className="mt-3 font-serif text-5xl leading-none sm:text-6xl">On GitHub</h2>
+          <p className="mt-5 max-w-[40ch] text-pretty text-fg-muted">
+            Live from the GitHub API, refreshed every hour.
+          </p>
+        </div>
+        <div>{overview ? <GithubActivityView overview={overview} /> : <Fallback />}</div>
       </div>
     </section>
   );
@@ -52,7 +51,7 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
       <dl className="flex flex-wrap gap-x-12 gap-y-4">
         {stats.map((s) => (
           <div key={s.label}>
-            <dd className="font-display text-3xl font-semibold text-fg tabular-nums">
+            <dd className="font-serif text-5xl text-fg tabular-nums">
               {s.value.toLocaleString("en-US")}
             </dd>
             <dt className="text-sm text-fg-muted">{s.label}</dt>
@@ -63,7 +62,7 @@ export function GithubActivityView({ overview }: { overview: GithubOverview }) {
       {overview.contributions && <Heatmap weeks={overview.contributions.weeks} />}
 
       <div>
-        <h3 className="mb-3 font-mono text-xs tracking-wide text-fg-muted uppercase">
+        <h3 className="mb-3 kicker">
           {overview.source === "pinned" ? "Pinned repositories" : "Recently active repositories"}
         </h3>
         {overview.repos.length > 0 ? (

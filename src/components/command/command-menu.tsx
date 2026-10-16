@@ -1,7 +1,17 @@
 "use client";
 
 import { Command } from "cmdk";
-import { ArrowRight, Code2, Copy, ExternalLink, FolderGit2, Home, Moon, Sun } from "lucide-react";
+import {
+  ArrowRight,
+  Code2,
+  Copy,
+  ExternalLink,
+  FolderGit2,
+  Home,
+  Moon,
+  Search,
+  Sun,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useTheme } from "@/components/theme/use-theme";
@@ -45,21 +55,17 @@ export function CommandMenu({ open, onOpenChange, projects }: CommandMenuProps) 
       onOpenChange={onOpenChange}
       label="Command menu"
       overlayClassName="fixed inset-0 z-50 bg-bg-deep/70 backdrop-blur-sm"
-      contentClassName="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-surface shadow-2xl shadow-black/40"
+      contentClassName="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-lg border border-border bg-bg-deep shadow-2xl shadow-black/50"
     >
       <div className="flex items-center gap-2 border-b border-border px-4">
-        <span aria-hidden="true" className="font-mono text-sm text-highlight">
-          $
-        </span>
+        <Search aria-hidden="true" className="size-4 text-fg-muted" />
         <Command.Input
-          placeholder="Type a command or search…"
-          className="h-12 w-full bg-transparent font-mono text-sm text-fg outline-none placeholder:text-fg-muted"
+          placeholder="Search pages, projects and actions"
+          className="h-14 w-full bg-transparent text-base text-fg outline-none placeholder:text-fg-muted"
         />
       </div>
       <Command.List className="max-h-80 overflow-y-auto p-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-fg-muted [&_[cmdk-group-heading]]:uppercase">
-        <Command.Empty className="py-8 text-center font-mono text-sm text-fg-muted">
-          command not found
-        </Command.Empty>
+        <Command.Empty className="py-8 text-center text-sm text-fg-muted">No results</Command.Empty>
 
         <Command.Group heading="Navigate">
           <Item icon={<Home />} onSelect={() => run(() => router.push("/"))}>
@@ -141,7 +147,7 @@ function Item({ children, icon, trailing, keywords, onSelect }: ItemProps) {
     <Command.Item
       onSelect={onSelect}
       keywords={keywords}
-      className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm text-fg-muted data-[selected=true]:bg-surface-raised data-[selected=true]:text-fg [&_svg]:size-4 [&_svg]:shrink-0"
+      className="flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm text-fg-muted data-[selected=true]:bg-surface-raised data-[selected=true]:text-fg [&_svg]:size-4 [&_svg]:shrink-0"
     >
       {icon}
       <span className="flex-1">{children}</span>

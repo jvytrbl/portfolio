@@ -5,14 +5,14 @@ type TocEntry = Project["toc"][number];
 export function TableOfContents({ entries }: { entries: TocEntry[] }) {
   if (entries.length === 0) return null;
   return (
-    <nav aria-label="On this page" className="font-mono text-xs">
-      <p className="mb-3 tracking-wider text-fg-muted uppercase">On this page</p>
+    <nav aria-label="In this story" className="text-sm">
+      <p className="mb-4 kicker">In this story</p>
       <ul className="space-y-2 border-l border-border">
         {entries.map((entry) => (
           <li key={entry.url}>
             <a
               href={entry.url}
-              className="-ml-px block border-l border-transparent pl-3 text-fg-muted transition-colors hover:border-accent hover:text-fg"
+              className="-ml-px block border-l border-transparent pl-3 text-fg-muted transition-colors hover:border-accent-strong hover:text-fg"
             >
               {entry.title}
             </a>
@@ -22,7 +22,7 @@ export function TableOfContents({ entries }: { entries: TocEntry[] }) {
                   <li key={child.url}>
                     <a
                       href={child.url}
-                      className="-ml-px block border-l border-transparent pl-6 text-fg-muted/80 transition-colors hover:border-accent hover:text-fg"
+                      className="-ml-px block border-l border-transparent pl-6 text-fg-muted/80 transition-colors hover:border-accent-strong hover:text-fg"
                     >
                       {child.title}
                     </a>

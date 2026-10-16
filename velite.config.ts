@@ -33,7 +33,7 @@ const projects = defineCollection({
     })
     .transform((data) => {
       const slug = data.path.replace(/^projects\//, "");
-      return { ...data, slug, url: `/projects/${slug}` };
+      return { ...data, slug, url: `/work/${slug}` };
     }),
 });
 

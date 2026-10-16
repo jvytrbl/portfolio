@@ -6,8 +6,8 @@ const expectDb = process.env.E2E_EXPECT_DB === "1";
 
 test.describe("contact form", () => {
   test("renders accessible fields and a safe unconfigured state", async ({ page }) => {
-    await page.goto("/#contact");
-    const form = page.locator("#contact form");
+    await page.goto("/contact");
+    const form = page.getByRole("main").locator("form");
 
     for (const label of [
       "Name (required)",
@@ -58,7 +58,7 @@ test.describe("health & views API", () => {
 
   test("case study reserves the counter slot but hides low counts", async ({ page }) => {
     // Fresh test databases sit far below the public threshold of 50 views.
-    await page.goto("/projects/unified-defect-ticketing");
+    await page.goto("/work/unified-defect-ticketing");
     await page.waitForLoadState("networkidle");
     const slot = page.getByTestId("view-counter");
     await expect(slot).toBeAttached();
@@ -68,11 +68,9 @@ test.describe("health & views API", () => {
 
 test.describe("github section", () => {
   test("renders live stats or a graceful fallback", async ({ page }) => {
-    await page.goto("/#github");
+    await page.goto("/work");
     const section = page.locator("section#github");
-    await expect(section.getByRole("heading", { name: "Open source activity" })).toBeVisible();
-    await expect(
-      section.getByText(/Public repos|stats are temporarily unavailable/).first(),
-    ).toBeVisible();
+    await expect(section.getByRole("heading", { name: "On GitHub" })).toBeVisible();
+    await expect(section.getByText(/Public repos|temporarily unavailable/).first()).toBeVisible();
   });
 });

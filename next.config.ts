@@ -6,6 +6,13 @@ import "./src/env";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  // The site moved from one long page to separate sections; keep old links alive.
+  async redirects() {
+    return [
+      { source: "/projects", destination: "/work", permanent: true },
+      { source: "/projects/:slug", destination: "/work/:slug", permanent: true },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

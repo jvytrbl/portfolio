@@ -1,16 +1,17 @@
 # Portfolio — Engineering Showcase
 
-Personal portfolio built as an engineering showcase: Next.js App Router, statically
-prerendered, dark-first terminal aesthetic.
+Personal portfolio designed as an engineering journal: a cinematic cover, case studies
+written as feature articles, and separate Work, About and Contact pages. Next.js App Router,
+statically prerendered. See `DESIGN.md` for the design system.
 
 ## Stack
 
 | Layer     | Choice                                                                 |
 | --------- | ---------------------------------------------------------------------- |
 | Framework | Next.js 16 (App Router, Cache Components), React 19, TypeScript strict |
-| Styling   | Tailwind CSS v4, design tokens in `src/app/globals.css`                |
+| Styling   | Tailwind CSS v4, OKLCH design tokens in `src/app/globals.css`          |
 | Content   | Velite — MDX + YAML validated by Zod schemas, Shiki code highlighting  |
-| UI        | cmdk (command palette), Lucide icons, Motion                           |
+| UI        | Instrument Serif/Sans, Motion, View Transitions, cmdk, Lucide          |
 | Data      | Supabase Postgres via Drizzle ORM (contact log, view counters)         |
 | Contact   | Server Action + Zod, Cloudflare Turnstile, Resend email                |
 | Env       | `@t3-oss/env-nextjs` + Zod, validated at build time                    |
@@ -76,7 +77,7 @@ outcomes: # optional, up to 4 headline metrics
 ```
 
 The MDX body supports GitHub-flavoured Markdown, syntax-highlighted code blocks, and the
-`<Callout>` component.
+`<Callout>` and `<Terminal>` components (see the Jotex case study for a `<Terminal>` example).
 
 ### Résumé
 
@@ -127,11 +128,14 @@ free 100/day). Visitor IPs are stored only as a keyed hash.
 
 ```
 src/
-  app/                 routes, root layout, global styles + tokens
+  app/                 routes: / (cover), /work, /work/[slug], /about, /contact
   components/
+    about/             career, credentials, toolkit chapters
     command/           Cmd+K palette (lazy-loaded on first open)
-    layout/            header, footer
-    mdx/               MDX renderer + components usable inside MDX
+    home/              cover, scroll story, pull quote, closing
+    layout/            header (active nav), colophon footer
+    mdx/               MDX renderer + <Callout>, <Terminal>
+    work/              archive index, GitHub section
     theme/             theme hook + toggle
     ui/                small primitives
   app/actions/         Server Actions (contact form)

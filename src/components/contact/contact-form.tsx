@@ -66,11 +66,11 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
         ref={statusRef}
         tabIndex={-1}
         role="status"
-        className="flex flex-col items-start gap-3 rounded-xl bg-success/10 p-6 outline-none"
+        className="flex flex-col items-start gap-4 border-y border-border py-10 outline-none"
       >
         <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
-        <p className="font-display text-xl font-semibold">Message sent</p>
-        <p className="text-fg">{state.message}</p>
+        <p className="font-serif text-5xl leading-none">Message sent.</p>
+        <p className="max-w-[50ch] text-lg text-fg-muted">{state.message}</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export function ContactForm({ configured, turnstileSiteKey }: ContactFormProps) 
       className="flex flex-col gap-5"
     >
       {!configured && (
-        <p id="contact-blocked" className="rounded-lg bg-surface-raised px-4 py-3 text-sm text-fg">
+        <p id="contact-blocked" className="border-y border-border py-3 text-sm text-fg-muted">
           The form is being set up. Until then, please use the email address.
         </p>
       )}
@@ -198,7 +198,7 @@ function Field({
   const hintId = `${id}-hint`;
   const describedBy = [error && errorId, hint && hintId].filter(Boolean).join(" ") || undefined;
   const className = cn(
-    "min-h-11 w-full rounded-md border bg-bg-deep px-3 py-2.5 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-accent focus:outline-none",
+    "min-h-12 w-full rounded-sm border bg-bg-deep px-4 py-3 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-fg focus:outline-none",
     error ? "border-danger" : "border-border",
   );
   const shared = {

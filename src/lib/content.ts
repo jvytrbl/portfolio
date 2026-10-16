@@ -16,15 +16,18 @@ function byNewest(a: Project, b: Project) {
   return b.publishedAt.localeCompare(a.publishedAt);
 }
 
+// Explicit `order` wins (1 = the cover story); unordered projects follow,
+// newest first. This order also numbers the case studies (Nº 01, Nº 02...).
+function byOrderThenNewest(a: Project, b: Project) {
+  return (a.order ?? Infinity) - (b.order ?? Infinity) || byNewest(a, b);
+}
+
 export function getProjects(): Project[] {
-  return projects.filter((p) => !(isProduction && p.draft)).sort(byNewest);
+  return projects.filter((p) => !(isProduction && p.draft)).sort(byOrderThenNewest);
 }
 
 export function getFeaturedProjects(): Project[] {
-  // Explicit `order` wins; unordered projects follow, newest first.
-  return getProjects()
-    .filter((p) => p.featured)
-    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+  return getProjects().filter((p) => p.featured);
 }
 
 export function getProjectBySlug(slug: string): Project | undefined {

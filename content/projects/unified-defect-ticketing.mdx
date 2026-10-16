@@ -8,10 +8,10 @@ featured: true
 order: 1
 publishedAt: 2026-05-01
 outcomes:
-  - label: Production apps
-    value: "2"
   - label: Departments using it daily
     value: "4"
+  - label: Production apps
+    value: "2"
   - label: Records paginated server-side
     value: "90,000+"
 ---
@@ -52,6 +52,24 @@ diagnosing the root cause as client-side loading at scale, I redesigned it to us
 pagination, keeping the UI responsive regardless of dataset size.
 
 ## Outcomes
+
+<Terminal
+  title="impact.log"
+  lines={[
+    { kind: "command", text: "cat impact.log" },
+    { kind: "output", lead: "4 departments", text: "use the ticketing system every day" },
+    {
+      kind: "output",
+      lead: "90,000+ records",
+      text: "stay fast after moving pagination server-side",
+    },
+    {
+      kind: "output",
+      lead: "2 production apps",
+      text: "built, shipped and run as the sole engineer",
+    },
+  ]}
+/>
 
 - One shared, traceable record of every defect across four departments.
 - ERP documents generated automatically instead of re-keyed by hand.

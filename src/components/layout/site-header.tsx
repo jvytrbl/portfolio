@@ -1,51 +1,31 @@
 import Link from "next/link";
 import { CommandMenuTrigger } from "@/components/command/command-menu-trigger";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { GithubIcon } from "@/components/ui/github-icon";
 import { getProjects } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { NavLinks } from "./nav-links";
 
 export function SiteHeader() {
   const projects = getProjects().map(({ title, url }) => ({ title, url }));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/75 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-border bg-bg">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-1 px-4 sm:gap-2 sm:px-8">
         <Link
           href="/"
-          className="group flex items-center gap-1 font-mono text-sm text-fg"
+          className="mr-auto font-serif text-xl leading-none whitespace-nowrap text-fg sm:text-2xl"
           aria-label={`${siteConfig.name}, home`}
         >
-          <span className="text-fg-muted">~/</span>
-          <span>{siteConfig.github.username}</span>
+          M. Hakimi
         </Link>
-
-        <nav aria-label="Primary" className="ml-auto hidden md:block">
-          <ul className="flex items-center gap-1">
-            {siteConfig.nav.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="flex min-h-11 items-center rounded-md px-3 text-sm text-fg-muted transition-colors hover:text-fg"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <nav aria-label="Primary">
+          <NavLinks />
         </nav>
-
-        <div className="ml-auto flex items-center gap-1 md:ml-0">
-          <CommandMenuTrigger projects={projects} />
-          <a
-            href={siteConfig.github.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub profile"
-            className="inline-flex size-11 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
-          >
-            <GithubIcon className="size-4" />
-          </a>
+        <div className="flex items-center border-l border-border pl-1 sm:pl-2">
+          {/* Keyboard palette: hidden on small touch screens, where the nav suffices. */}
+          <div className="hidden sm:block">
+            <CommandMenuTrigger projects={projects} />
+          </div>
           <ThemeToggle />
         </div>
       </div>

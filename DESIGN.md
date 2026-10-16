@@ -1,39 +1,48 @@
-# Design system
+# Design system: the engineering journal
 
-## Colour (OKLCH, tokens in `src/app/globals.css`)
+## Editions and colour (OKLCH, tokens in `src/app/globals.css`)
 
-Strategy: **committed**. The navy base (#080e2e, `oklch(0.182 0.065 270.4)`) carries the surface;
-neutrals are tinted toward hue ~270. No pure black or white.
+Strategy: **committed**. Ink-indigo carries every surface; crimson is the only accent.
 
-| Token                                                  | Role                                                                             |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| `bg-deep`, `bg`, `surface`, `surface-raised`, `border` | Navy surface steps                                                               |
-| `fg`, `fg-muted`                                       | Text. Use `fg` for anything a reader must take in; `fg-muted` for metadata only. |
-| `accent` (cyan)                                        | Interactive: links, primary buttons, focus rings, key figures in the terminal    |
-| `highlight` (amber)                                    | **One role only:** the terminal `$` prompt                                       |
-| `success`, `danger`                                    | Status                                                                           |
+| Token           | Ink (default)                         | Paper (light)  | Role                                                  |
+| --------------- | ------------------------------------- | -------------- | ----------------------------------------------------- |
+| `bg`            | `#070429` · `oklch(0.15 0.074 277.8)` | warm ivory     | Page                                                  |
+| `fg`            | ivory `oklch(0.94 0.022 85)`          | indigo ink     | Body and headlines                                    |
+| `fg-muted`      | warm grey-ivory                       | grey-indigo    | Metadata, captions                                    |
+| `accent`        | rose `oklch(0.72 0.14 15)`            | crimson        | Links and emphasis read as text (7.5:1 on ink)        |
+| `accent-strong` | crimson `oklch(0.47 0.165 20)`        | crimson        | Fills, rules, bullets, marks; never small text on ink |
+| `border`        | indigo hairline                       | ivory hairline | Rules between items                                   |
+| `highlight`     | gold                                  | amber          | The terminal `$` prompt only                          |
+
+A faint SVG grain overlay gives a printed-stock texture in both editions.
 
 ## Typography
 
-- Display: **Space Grotesk** (`font-display`) for H1/H2/H3 and large figures.
-- Body: Geist Sans. Mono: Geist Mono for metadata, eyebrows, and the terminal.
-- Body line length capped at 60–70ch. Scale steps ≥1.25.
-- Eyebrows: `font-mono text-xs uppercase tracking-wide text-fg-muted`, format `01 · Label`.
+- **Instrument Serif** (`font-serif`): all headlines, large figures, pull quotes. Italic is used
+  for emphasis words ("The _work_", "Write _to me._").
+- **Instrument Sans** (`font-sans`): body text.
+- **IBM Plex Mono** (`font-mono`, `kicker` utility): folios, kickers, captions, uppercase with
+  wide tracking.
+- Scale is dramatic on purpose: cover name up to 14rem; page titles 10rem; section titles 5–7rem.
+- Body measure 60–68ch. Articles get a drop cap on the first paragraph.
 
 ## Layout
 
-- Container `max-w-6xl`. Section rhythm varies: primary sections `py-28`, supporting `py-20`.
-- Cards only where they're the real affordance (project cards on /projects, the lead project).
-  Skills, credentials, and repositories are typographic lists with hairline dividers.
-- Never nest cards.
+- 12-column editorial grid, container `max-w-7xl`.
+- Hairline rules (`border-border`) separate items instead of cards. No cards anywhere.
+- Kicker row with folio (Nº 01 · 2026) opens the cover; chapters on About use roman numerals.
 
 ## Motion
 
-- Ease-out curves, transform/opacity only, `transition-[...]` with named properties.
-- No infinite animations; the caret blinks 4 times then rests. Reduced motion disables all motion.
-- The hero terminal types quickly and has a Skip control.
+- Cover lines rise out of a mask (CSS, plays before hydration).
+- Home story chapter is pinned and scroll-linked (Motion `useScroll`/`useTransform`).
+- Pull quote words light up with scroll.
+- Page changes crossfade via React `<ViewTransition>`; project titles morph from the archive
+  into the case-study headline.
+- Transform/opacity only, ease-out-expo; everything disabled under reduced motion.
 
 ## Components
 
-- Buttons: `min-h-11`, primary (accent fill) / outline / ghost.
-- Form fields: `text-base min-h-11`, sentence-case labels with "(required)" / "(optional)".
+- Buttons: `rounded-full`, `min-h-11`; primary = crimson fill.
+- Form fields: `text-base min-h-12`, sentence-case labels with "(required)" / "(optional)".
+- `WorkIndex`: the shared editorial table of contents (Home and /work).

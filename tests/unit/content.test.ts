@@ -43,3 +43,21 @@ describe("credentials", () => {
     expect(getCredentials().education[0].institution).toBe("Uni");
   });
 });
+
+describe("ordering", () => {
+  it("puts explicitly ordered projects first, then newest", async () => {
+    vi.doMock("#site/content", async () => {
+      const real =
+        await vi.importActual<typeof import("../fixtures/content")>("../fixtures/content");
+      return {
+        ...real,
+        projects: real.projects.map((p) => (p.slug === "old" ? { ...p, order: 1 } : p)),
+      };
+    });
+    vi.stubEnv("NODE_ENV", "development");
+    const { getProjects, getFeaturedProjects } = await loadContent();
+    expect(getProjects().map((p) => p.slug)).toEqual(["old", "draft", "new"]);
+    expect(getFeaturedProjects()[0].slug).toBe("old");
+    vi.doUnmock("#site/content");
+  });
+});

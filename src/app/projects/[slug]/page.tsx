@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { MDXContent } from "@/components/mdx/mdx-content";
 import { Reveal } from "@/components/motion/reveal";
 import { TableOfContents } from "@/components/projects/table-of-contents";
+import { ViewCounter } from "@/components/projects/view-counter";
 import { buttonClass } from "@/components/ui/button";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { Tag } from "@/components/ui/tag";
@@ -70,6 +71,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               <span>{project.role}</span>
             </>
           )}
+          <ViewCounter slug={project.slug} />
         </p>
         <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
           {project.title}

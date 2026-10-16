@@ -1,22 +1,50 @@
-# Placeholder career timeline — newest first. Omit `end` for a current role.
-- company: Example Corp
-  role: Software Engineer
-  location: Kuala Lumpur, MY
-  employmentType: Full-time
-  start: 2024-03
-  summary: Placeholder — building internal platforms that integrate ERP data with modern web apps.
+# Career timeline. Omit `end` for a current role.
+- company: Enviros Survey and Consultancy Sdn Bhd
+  role: IT and System Support Associate
+  location: Ampang
+  start: 2026-09
+  summary: >-
+    Production work on ENV-Portal, the company's internal platform (Next.js, Prisma, PostgreSQL),
+    under a formal SDLC and ISO 27001 security framework.
   highlights:
-    - Placeholder — led the vendor performance platform from prototype to production.
-    - Placeholder — cut quarterly reporting effort by ~80% with automated exports.
-  techStack: [Next.js, TypeScript, SQL Server, Azure]
+    - Delivered ticket reassignment and remarking for the IT Hub module, writing domain logic
+      test-first (Red-Green-Refactor) to catch edge cases before production.
+    - Worked within a multi-layered architecture, keeping an isolated legacy SQL Server module
+      behind its dedicated data-access layer instead of blurring boundaries for convenience.
+    - Engineered under ISO 27001:2022 Annex A controls — CI/CD security gates, secrets management,
+      and data masking.
+  techStack: [Next.js, Prisma, PostgreSQL, SQL Server, TDD]
 
-- company: Sample Solutions
-  role: Junior Developer
-  location: Remote
-  employmentType: Contract
-  start: 2022-06
-  end: 2024-02
-  summary: Placeholder — delivered client web apps and REST API integrations.
+- company: Jotex Sdn Bhd
+  role: Software Engineer
+  location: Seremban
+  start: 2026-05
+  summary: >-
+    Sole engineer who replaced a fabric manufacturer's fragmented defect reporting — spread across
+    WhatsApp groups and manual logs — with a unified ticketing system used daily by sales,
+    warehouse, accounts, and purchasing.
   highlights:
-    - Placeholder — shipped 6 client projects end to end.
-  techStack: [React, Node.js, PostgreSQL]
+    - Own two production Next.js apps end to end — a mobile-first PWA for field sales and a desktop
+      operations dashboard — on a shared Supabase backend with real-time sync.
+    - Architected multi-tenant, role-based access across business units with Microsoft Azure AD SSO.
+    - Built an ERP integration pipeline with Microsoft Dynamics Business Central for automated
+      service order and credit note generation.
+    - Fixed browser stability failures by redesigning a 90,000+ record data browser from
+      client-side to server-side pagination.
+  techStack: [Next.js, Supabase, PWA, Azure AD, Business Central]
+
+- company: Beyond2U Sdn Bhd
+  role: System Engineer
+  location: Cheras
+  start: 2025-06
+  end: 2025-09
+  summary: >-
+    Supported a large-scale enterprise IT environment with a focus on uptime and security
+    compliance.
+  highlights:
+    - Diagnosed hardware and software issues across 150+ client devices, cutting average downtime
+      by 40%.
+    - Rolled out Windows updates and critical security patches to 200+ enterprise devices within
+      strict maintenance windows.
+    - Reinstalled and reformatted 75+ devices, improving stability and performance by 30%.
+  techStack: [Windows, Patch management, Endpoint support]

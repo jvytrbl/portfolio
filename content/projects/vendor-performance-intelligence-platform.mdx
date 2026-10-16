@@ -1,0 +1,85 @@
+---
+title: Vendor Performance Intelligence Platform
+summary: Capstone system that scores vendors on delivery, pricing, and order accuracy — with AI that only narrates numbers the application has already calculated and validated.
+category: AI/ML
+techStack:
+  [
+    Next.js,
+    PostgreSQL,
+    Azure SQL,
+    Gemini API,
+    Azure AD,
+    Azure Key Vault,
+    Vitest,
+    Playwright,
+    Stryker,
+  ]
+role: Sole engineer
+featured: true
+publishedAt: 2026-09-01
+outcomes:
+  - label: Performance benchmarks
+    value: "3"
+  - label: Test layers
+    value: Unit · E2E · Mutation
+  - label: Cloud infra
+    value: Self-provisioned
+---
+
+## Problem
+
+Vendor performance reporting needed to be trustworthy enough to act on. Two risks stood out:
+incomplete vendor records being silently shown as poor performance, and AI-generated summaries
+inventing or miscalculating figures.
+
+## Requirements first
+
+The project started from a formal User Requirements Document, taken through multiple rounds of
+revision to sign-off by a senior engineer. The goal was requirements precise enough to be
+**testable**, not aspirational.
+
+## Architecture
+
+```txt
+Vendor data ──► data model (3 benchmarks) ──► scoring in application code
+                                                    │
+                                                    ▼
+                         Gemini API ◄── computed figures only (schema-constrained)
+                              │
+                              ▼
+            validation against source data ──► finalised report
+```
+
+### Data model
+
+Three performance benchmarks — **delivery time**, **pricing**, and **order accuracy** — with
+deliberate handling of _missing_ versus _zero_ data, so the system never silently misrepresents an
+incomplete vendor record.
+
+### AI that narrates, never calculates
+
+All numbers are computed by the application. The AI only writes the narrative around figures that
+already exist, and a validation step checks its output against the source data before anything is
+finalised.
+
+The integration itself is engineered defensively:
+
+- Retry logic with exponential backoff
+- Circuit-breaker protection when the provider is unhealthy
+- Schema-constrained output
+- Full interaction logging
+
+## Testing strategy
+
+A multi-layered strategy built from scratch:
+
+- **Vitest** for unit and integration tests
+- **Playwright** for end-to-end browser tests
+- **Stryker** mutation testing to prove the suite catches real bugs rather than passing
+  superficially
+
+## Infrastructure & security
+
+Provisioned and secured independently as the sole engineer: Azure AD app registration, Azure SQL
+Database, Key Vault for credentials and secrets, and role-based access control scoped to least
+privilege — plus budget alerts and version control on GitHub.

@@ -1,4 +1,11 @@
-import { experience, projects, skills, type Experience, type Project } from "#site/content";
+import {
+  credentials,
+  experience,
+  projects,
+  skills,
+  type Experience,
+  type Project,
+} from "#site/content";
 
 // Typed read layer over the Velite output. Pages import from here, never
 // from #site/content directly, so sorting/filtering rules live in one place.
@@ -37,5 +44,9 @@ export function getSkills() {
   return skills;
 }
 
+export function getCredentials() {
+  return credentials;
+}
+
 export type { Experience, Project };
-export type { SkillCategory } from "#site/content";
+export type { Credentials, SkillCategory } from "#site/content";

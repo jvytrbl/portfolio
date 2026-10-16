@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Search } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Kbd } from "@/components/ui/kbd";
+import type { CommandProject } from "./command-menu";
 
 // The palette (cmdk + Radix Dialog) is only downloaded on first open,
 // keeping it out of the initial JS bundle.
@@ -14,7 +15,7 @@ const CommandMenu = dynamic(() => import("./command-menu").then((m) => m.Command
 const subscribeNoop = () => () => {};
 const detectMac = () => /Mac|iPhone|iPad/.test(navigator.platform);
 
-export function CommandMenuTrigger() {
+export function CommandMenuTrigger({ projects }: { projects: CommandProject[] }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const isMac = useSyncExternalStore(subscribeNoop, detectMac, () => false);
@@ -52,7 +53,7 @@ export function CommandMenuTrigger() {
           <Kbd>K</Kbd>
         </span>
       </button>
-      {loaded && <CommandMenu open={open} onOpenChange={show} />}
+      {loaded && <CommandMenu open={open} onOpenChange={show} projects={projects} />}
     </>
   );
 }

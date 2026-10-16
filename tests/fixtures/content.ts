@@ -1,6 +1,6 @@
 // Stand-in for the Velite output (#site/content) so unit tests don't depend
 // on a content build. Shapes mirror the real generated types.
-import type { Experience, Project, SkillCategory } from "../../.velite";
+import type { Credentials, Experience, Project, SkillCategory } from "../../.velite";
 
 function project(
   fields: Pick<Project, "title" | "slug" | "featured" | "draft" | "publishedAt">,
@@ -75,8 +75,13 @@ export const experience: Experience[] = [
   },
 ];
 
-export const skills: SkillCategory[] = [
-  { category: "Frontend", items: [{ name: "React", level: "expert" }] },
-];
+export const skills: SkillCategory[] = [{ category: "Frontend", items: ["React"] }];
 
-export type { Experience, Project, SkillCategory };
+export const credentials: Credentials = {
+  education: [{ degree: "BSc", institution: "Uni", start: "2023-06" }],
+  awards: [],
+  certifications: [],
+  languages: [{ name: "English", proficiency: "Expert" }],
+};
+
+export type { Credentials, Experience, Project, SkillCategory };
